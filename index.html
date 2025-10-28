@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disparador WhatsApp em Massa - Avançado</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        textarea, input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload-label:hover {
+            background: #e7e9fc;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e7f3ff;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #0066cc;
+            display: none;
+        }
+
+        .media-preview {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .media-preview img, .media-preview video {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .download-template {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 13px;
+            transition: background 0.3s;
+        }
+
+        .download-template:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 Disparador WhatsApp em Massa</h1>
+        <p class="subtitle">Envie mensagens, imagens e vídeos com intervalo personalizado</p>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('manual')">✍️ Manual</button>
+            <button class="tab" onclick="switchTab('planilha')">📊 Planilha</button>
+        </div>
+
+        <form id="whatsappForm">
+            <div class="form-group">
+                <label for="webhookUrl">URL do Webhook n8n:</label>
+                <input type="url" id="webhookUrl" required 
+                       placeholder="https://seu-n8n.com/webhook/webhook-whatsapp">
+                <div class="help-text">Cole a URL do webhook gerada pelo n8n</div>
+            </div>
+
+            <!-- Tab Manual -->
+            <div id="manual-tab" class="tab-content active">
+                <div class="form-group">
+                    <label for="contacts">Números de WhatsApp:</label>
+                    <textarea id="contacts" 
+                              placeholder="5511999999999&#10;5511888888888&#10;5511777777777"></textarea>
+                    <div class="help-text">Um número por linha (formato: DDI + DDD + Número)</div>
+                </div>
+            </div>
+
+            <!-- Tab Planilha -->
+            <div id="planilha-tab" class="tab-content">
+                <div class="form-group">
+                    <label>Upload de Planilha (CSV ou Excel):</label>
+                    <div class="file-upload">
+                        <input type="file" id="spreadsheet" accept=".csv,.xlsx,.xls" onchange="handleSpreadsheet(event)">
+                        <label for="spreadsheet" class="file-upload-label">
+                            <span>📁</span>
+                            <span>Clique para selecionar a planilha</span>
+                        </label>
+                    </div>
+                    <div id="fileName" class="file-name"></div>
+                    <a href="#" class="download-template" onclick="downloadTemplate()">⬇️ Baixar Modelo de Planilha</a>
+                    <div class="help-text">A planilha deve ter uma coluna "numero" (obrigatório) e opcionalmente "nome"</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="mediaType">Tipo de Mensagem:</label>
+                <select id="mediaType" onchange="toggleMediaUpload()">
+                    <option value="text">Apenas Texto</option>
+                    <option value="image">Imagem</option>
+                    <option value="video">Vídeo</option>
+                </select>
+            </div>
+
+            <div id="mediaUploadSection" class="form-group" style="display: none;">
+                <label>Upload de Mídia:</label>
+                <div class="file-upload">
+                    <input type="file" id="mediaFile" accept="image/*,video/*" onchange="handleMediaUpload(event)">
+                    <label for="mediaFile" class="file-upload-label">
+                        <span>🖼️</span>
+                        <span>Clique para selecionar imagem ou vídeo</span>
+                    </label>
+                </div>
+                <div id="mediaFileName" class="file-name"></div>
+                <div id="mediaPreview" class="media-preview"></div>
+                <div class="help-text">Ou cole a URL da mídia abaixo:</div>
+                <input type="url" id="mediaUrl" placeholder="https://exemplo.com/imagem.jpg">
+            </div>
+
+            <div class="form-group">
+                <label for="message">Mensagem:</label>
+                <textarea id="message" required 
+                          placeholder="Olá! Esta é uma mensagem automática..."></textarea>
+                <div class="help-text">Use {nome} para personalizar com o nome do contato (se disponível na planilha)</div>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="delay">Intervalo entre mensagens (segundos):</label>
+                    <input type="number" id="delay" value="5" min="1" max="300" required>
+                    <div class="help-text">Recomendado: 5-10 segundos para evitar bloqueios</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="totalContacts">Total de Contatos:</label>
+                    <input type="text" id="totalContacts" value="0" readonly style="background: #f8f9fa;">
+                </div>
+            </div>
+
+            <button type="submit" id="sendBtn">
+                🚀 Iniciar Envio
+            </button>
+        </form>
+
+        <div class="progress-container" id="progressContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+        </div>
+
+        <div id="status" class="status"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        let contactsList = [];
+        let mediaBase64 = '';
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + '-tab').classList.add('active');
+            
+            updateContactCount();
+        }
+
+        function toggleMediaUpload() {
+            const mediaType = document.getElementById('mediaType').value;
+            const mediaSection = document.getElementById('mediaUploadSection');
+            
+            if (mediaType === 'text') {
+                mediaSection.style.display = 'none';
+            } else {
+                mediaSection.style.display = 'block';
+                const fileInput = document.getElementById('mediaFile');
+                fileInput.accept = mediaType === 'image' ? 'image/*' : 'video/*';
+            }
+        }
+
+        function handleSpreadsheet(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            document.getElementById('fileName').textContent = `📄 ${file.name}`;
+            document.getElementById('fileName').style.display = 'block';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet);
+
+                    contactsList = jsonData.map(row => ({
+                        number: String(row.numero || row.number || row.telefone || '').replace(/\D/g, ''),
+                        name: row.nome || row.name || ''
+                    })).filter(contact => contact.number);
+
+                    updateContactCount();
+                    showStatus(`✅ ${contactsList.length} contatos carregados da planilha!`, 'success');
+                } catch (error) {
+                    showStatus(`❌ Erro ao ler planilha: ${error.message}`, 'error');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function handleMediaUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            document.getElementById('mediaFileName').textContent = `📎 ${file.name}`;
+            document.getElementById('mediaFileName').style.display = 'block';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                mediaBase64 = e.target.result;
+                
+                const preview = document.getElementById('mediaPreview');
+                preview.style.display = 'block';
+                
+                if (file.type.startsWith('image/')) {
+                    preview.innerHTML = `<img src="${mediaBase64}" alt="Preview">`;
+                } else if (file.type.startsWith('video/')) {
+                    preview.innerHTML = `<video controls src="${mediaBase64}"></video>`;
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateContactCount() {
+            const manualContacts = document.getElementById('contacts').value
+                .split('\n')
+                .map(c => c.trim())
+                .filter(c => c.length > 0);
+            
+            const activeTab = document.querySelector('.tab.active').textContent;
+            const total = activeTab.includes('Manual') ? manualContacts.length : contactsList.length;
+            
+            document.getElementById('totalContacts').value = total;
+        }
+
+        document.getElementById('contacts').addEventListener('input', updateContactCount);
+
+        function downloadTemplate() {
+            event.preventDefault();
+            
+            const template = [
+                ['numero', 'nome'],
+                ['5511999999999', 'João Silva'],
+                ['5511888888888', 'Maria Santos'],
+                ['5511777777777', 'Pedro Oliveira']
+            ];
+
+            const ws = XLSX.utils.aoa_to_sheet(template);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Contatos');
+            XLSX.writeFile(wb, 'modelo_contatos_whatsapp.xlsx');
+        }
+
+        const form = document.getElementById('whatsappForm');
+        const statusDiv = document.getElementById('status');
+        const sendBtn = document.getElementById('sendBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const webhookUrl = document.getElementById('webhookUrl').value;
+            const message = document.getElementById('message').value;
+            const delay = parseInt(document.getElementById('delay').value);
+            const mediaType = document.getElementById('mediaType').value;
+            let mediaUrl = document.getElementById('mediaUrl')?.value || '';
+
+            // Determinar lista de contatos
+            const activeTab = document.querySelector('.tab.active').textContent;
+            let contacts;
+            
+            if (activeTab.includes('Manual')) {
+                const contactsText = document.getElementById('contacts').value;
+                contacts = contactsText
+                    .split('\n')
+                    .map(c => c.trim())
+                    .filter(c => c.length > 0)
+                    .map(c => ({ number: c, name: '' }));
+            } else {
+                contacts = contactsList;
+            }
+
+            if (contacts.length === 0) {
+                showStatus('❌ Por favor, adicione pelo menos um contato.', 'error');
+                return;
+            }
+
+            // Usar base64 se foi feito upload
+            if (mediaBase64 && mediaType !== 'text') {
+                mediaUrl = mediaBase64;
+            }
+
+            // Validar mídia se necessário
+            if (mediaType !== 'text' && !mediaUrl) {
+                showStatus('❌ Por favor, faça upload de uma mídia ou cole a URL.', 'error');
+                return;
+            }
+
+            // Desabilitar botão e mostrar progresso
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<span class="loading"></span> Enviando...';
+            progressContainer.style.display = 'block';
+            showStatus(`📤 Iniciando envio para ${contacts.length} contato(s)...`, 'info');
+
+            try {
+                // Enviar em lotes para evitar timeout
+                const batchSize = 50;
+                let sent = 0;
+
+                for (let i = 0; i < contacts.length; i += batchSize) {
+                    const batch = contacts.slice(i, i + batchSize);
+                    
+                    // Personalizar mensagem
+                    const personalizedBatch = batch.map(contact => ({
+                        ...contact,
+                        personalizedMessage: message.replace('{nome}', contact.name || 'Cliente')
+                    }));
+
+                    const response = await fetch(webhookUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            contacts: personalizedBatch.map(c => c.number),
+                            message: message,
+                            mediaUrl: mediaUrl,
+                            mediaType: mediaType,
+                            delay: delay
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Erro ao enviar lote de mensagens');
+                    }
+
+                    sent += batch.length;
+                    const progress = Math.round((sent / contacts.length) * 100);
+                    progressFill.style.width = progress + '%';
+                    progressFill.textContent = progress + '%';
+                    
+                    showStatus(`📨 Enviando... ${sent}/${contacts.length} mensagens`, 'info');
+
+                    // Aguardar entre lotes
+                    if (i + batchSize < contacts.length) {
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                    }
+                }
+
+                showStatus(`✅ Processo iniciado! ${contacts.length} mensagens serão enviadas com intervalo de ${delay}s entre cada uma.`, 'success');
+                
+                // Calcular tempo estimado
+                const totalTime = contacts.length * delay;
+                const minutes = Math.floor(totalTime / 60);
+                const seconds = totalTime % 60;
+                showStatus(`✅ Envio concluído! Tempo estimado total: ${minutes}min ${seconds}s`, 'success');
+                
+            } catch (error) {
+                showStatus(`❌ Erro ao enviar mensagens: ${error.message}`, 'error');
+                progressFill.style.width = '0%';
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '🚀 Iniciar Envio';
+            }
+        });
+
+        function showStatus(message, type) {
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+            statusDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
