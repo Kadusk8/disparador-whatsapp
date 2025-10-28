@@ -268,10 +268,30 @@
             border-radius: 5px;
             font-size: 13px;
             transition: background 0.3s;
+            cursor: pointer;
         }
 
         .download-template:hover {
             background: #218838;
+        }
+
+        .console-log {
+            margin-top: 20px;
+            padding: 15px;
+            background: #1e1e1e;
+            color: #00ff00;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .console-log-title {
+            color: #00ff00;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -289,8 +309,8 @@
             <div class="form-group">
                 <label for="webhookUrl">URL do Webhook n8n:</label>
                 <input type="url" id="webhookUrl" required 
-                       placeholder="https://seu-n8n.com/webhook/webhook-whatsapp">
-                <div class="help-text">Cole a URL do webhook gerada pelo n8n</div>
+                       placeholder="https://seu-n8n.com/webhook/whatsapp-sender">
+                <div class="help-text">⚠️ Use a URL de PRODUÇÃO (não a de teste). O workflow deve estar ATIVADO!</div>
             </div>
 
             <!-- Tab Manual -->
@@ -298,8 +318,10 @@
                 <div class="form-group">
                     <label for="contacts">Números de WhatsApp:</label>
                     <textarea id="contacts" 
-                              placeholder="5511999999999&#10;5511888888888&#10;5511777777777"></textarea>
-                    <div class="help-text">Um número por linha (formato: DDI + DDD + Número)</div>
+                              placeholder="5511999999999
+5511888888888
+5511777777777"></textarea>
+                    <div class="help-text">Um número por linha (formato: DDI + DDD + Número, sem espaços)</div>
                 </div>
             </div>
 
@@ -315,7 +337,7 @@
                         </label>
                     </div>
                     <div id="fileName" class="file-name"></div>
-                    <a href="#" class="download-template" onclick="downloadTemplate()">⬇️ Baixar Modelo de Planilha</a>
+                    <a class="download-template" onclick="downloadTemplate()">⬇️ Baixar Modelo de Planilha</a>
                     <div class="help-text">A planilha deve ter uma coluna "numero" (obrigatório) e opcionalmente "nome"</div>
                 </div>
             </div>
@@ -376,12 +398,32 @@
         </div>
 
         <div id="status" class="status"></div>
+
+        <div id="consoleLog" class="console-log">
+            <div class="console-log-title">📋 Log de Depuração:</div>
+            <div id="consoleLogContent"></div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
         let contactsList = [];
         let mediaBase64 = '';
+
+        // Função para adicionar log visual
+        function addLog(message, type = 'info') {
+            const consoleLog = document.getElementById('consoleLog');
+            const consoleLogContent = document.getElementById('consoleLogContent');
+            consoleLog.style.display = 'block';
+            
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? '#ff4444' : type === 'success' ? '#00ff00' : '#00ccff';
+            
+            consoleLogContent.innerHTML += `<div style="color: ${color};">[${timestamp}] ${message}</div>`;
+            consoleLogContent.scrollTop = consoleLogContent.scrollHeight;
+            
+            console.log(`[${timestamp}] ${message}`);
+        }
 
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -412,6 +454,7 @@
 
             document.getElementById('fileName').textContent = `📄 ${file.name}`;
             document.getElementById('fileName').style.display = 'block';
+            addLog(`Lendo planilha: ${file.name}`);
 
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -427,8 +470,10 @@
                     })).filter(contact => contact.number);
 
                     updateContactCount();
+                    addLog(`✅ ${contactsList.length} contatos carregados da planilha!`, 'success');
                     showStatus(`✅ ${contactsList.length} contatos carregados da planilha!`, 'success');
                 } catch (error) {
+                    addLog(`❌ Erro ao ler planilha: ${error.message}`, 'error');
                     showStatus(`❌ Erro ao ler planilha: ${error.message}`, 'error');
                 }
             };
@@ -441,6 +486,7 @@
 
             document.getElementById('mediaFileName').textContent = `📎 ${file.name}`;
             document.getElementById('mediaFileName').style.display = 'block';
+            addLog(`Carregando mídia: ${file.name}`);
 
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -454,6 +500,8 @@
                 } else if (file.type.startsWith('video/')) {
                     preview.innerHTML = `<video controls src="${mediaBase64}"></video>`;
                 }
+                
+                addLog(`✅ Mídia carregada com sucesso!`, 'success');
             };
             reader.readAsDataURL(file);
         }
@@ -486,6 +534,8 @@
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, 'Contatos');
             XLSX.writeFile(wb, 'modelo_contatos_whatsapp.xlsx');
+            
+            addLog('✅ Modelo de planilha baixado!', 'success');
         }
 
         const form = document.getElementById('whatsappForm');
@@ -497,11 +547,18 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            // Limpar log anterior
+            document.getElementById('consoleLogContent').innerHTML = '';
+            document.getElementById('consoleLog').style.display = 'block';
+
             const webhookUrl = document.getElementById('webhookUrl').value;
             const message = document.getElementById('message').value;
             const delay = parseInt(document.getElementById('delay').value);
             const mediaType = document.getElementById('mediaType').value;
             let mediaUrl = document.getElementById('mediaUrl')?.value || '';
+
+            addLog('🚀 Iniciando processo de envio...');
+            addLog(`Webhook URL: ${webhookUrl}`);
 
             // Determinar lista de contatos
             const activeTab = document.querySelector('.tab.active').textContent;
@@ -512,13 +569,15 @@
                 contacts = contactsText
                     .split('\n')
                     .map(c => c.trim())
-                    .filter(c => c.length > 0)
-                    .map(c => ({ number: c, name: '' }));
+                    .filter(c => c.length > 0);
+                addLog(`Modo: Manual - ${contacts.length} contatos`);
             } else {
-                contacts = contactsList;
+                contacts = contactsList.map(c => c.number);
+                addLog(`Modo: Planilha - ${contacts.length} contatos`);
             }
 
             if (contacts.length === 0) {
+                addLog('❌ Nenhum contato encontrado!', 'error');
                 showStatus('❌ Por favor, adicione pelo menos um contato.', 'error');
                 return;
             }
@@ -526,10 +585,14 @@
             // Usar base64 se foi feito upload
             if (mediaBase64 && mediaType !== 'text') {
                 mediaUrl = mediaBase64;
+                addLog('Usando mídia em base64 (upload)');
+            } else if (mediaUrl) {
+                addLog(`Usando mídia por URL: ${mediaUrl}`);
             }
 
             // Validar mídia se necessário
             if (mediaType !== 'text' && !mediaUrl) {
+                addLog('❌ Mídia não fornecida!', 'error');
                 showStatus('❌ Por favor, faça upload de uma mídia ou cole a URL.', 'error');
                 return;
             }
@@ -540,61 +603,89 @@
             progressContainer.style.display = 'block';
             showStatus(`📤 Iniciando envio para ${contacts.length} contato(s)...`, 'info');
 
+            // Preparar dados para envio
+            const payload = {
+                contacts: contacts,
+                message: message,
+                mediaUrl: mediaUrl,
+                mediaType: mediaType,
+                delay: delay
+            };
+
+            addLog('📦 Payload preparado:');
+            addLog(JSON.stringify(payload, null, 2));
+
             try {
-                // Enviar em lotes para evitar timeout
-                const batchSize = 50;
-                let sent = 0;
+                addLog('📡 Enviando requisição para o webhook...');
+                
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
 
-                for (let i = 0; i < contacts.length; i += batchSize) {
-                    const batch = contacts.slice(i, i + batchSize);
-                    
-                    // Personalizar mensagem
-                    const personalizedBatch = batch.map(contact => ({
-                        ...contact,
-                        personalizedMessage: message.replace('{nome}', contact.name || 'Cliente')
-                    }));
-
-                    const response = await fetch(webhookUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            contacts: personalizedBatch.map(c => c.number),
-                            message: message,
-                            mediaUrl: mediaUrl,
-                            mediaType: mediaType,
-                            delay: delay
-                        })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Erro ao enviar lote de mensagens');
-                    }
-
-                    sent += batch.length;
-                    const progress = Math.round((sent / contacts.length) * 100);
-                    progressFill.style.width = progress + '%';
-                    progressFill.textContent = progress + '%';
-                    
-                    showStatus(`📨 Enviando... ${sent}/${contacts.length} mensagens`, 'info');
-
-                    // Aguardar entre lotes
-                    if (i + batchSize < contacts.length) {
-                        await new Promise(resolve => setTimeout(resolve, 2000));
-                    }
+                addLog(`📥 Resposta recebida - Status: ${response.status} ${response.statusText}`);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    addLog(`❌ Erro na resposta: ${errorText}`, 'error');
+                    throw new Error(`Erro ${response.status}: ${errorText || response.statusText}`);
                 }
 
-                showStatus(`✅ Processo iniciado! ${contacts.length} mensagens serão enviadas com intervalo de ${delay}s entre cada uma.`, 'success');
+                let result;
+                const contentType = response.headers.get('content-type');
+                
+                if (contentType && contentType.includes('application/json')) {
+                    result = await response.json();
+                    addLog('✅ Resposta JSON recebida:');
+                    addLog(JSON.stringify(result, null, 2), 'success');
+                } else {
+                    result = await response.text();
+                    addLog('✅ Resposta de texto recebida:');
+                    addLog(result, 'success');
+                }
+
+                progressFill.style.width = '100%';
+                progressFill.textContent = '100%';
                 
                 // Calcular tempo estimado
                 const totalTime = contacts.length * delay;
                 const minutes = Math.floor(totalTime / 60);
                 const seconds = totalTime % 60;
-                showStatus(`✅ Envio concluído! Tempo estimado total: ${minutes}min ${seconds}s`, 'success');
+                
+                const successMessage = `✅ Processo iniciado com sucesso! ${contacts.length} mensagens serão enviadas com intervalo de ${delay}s. Tempo estimado: ${minutes}min ${seconds}s`;
+                
+                addLog(successMessage, 'success');
+                showStatus(successMessage, 'success');
                 
             } catch (error) {
-                showStatus(`❌ Erro ao enviar mensagens: ${error.message}`, 'error');
+                addLog(`❌ ERRO: ${error.message}`, 'error');
+                addLog(`Stack: ${error.stack}`, 'error');
+                
+                let errorMessage = error.message;
+                
+                // Mensagens de erro mais amigáveis
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage = 'Não foi possível conectar ao webhook. Verifique:\n' +
+                                 '1. A URL está correta?\n' +
+                                 '2. O workflow do n8n está ATIVADO?\n' +
+                                 '3. Você está usando a URL de PRODUÇÃO (não teste)?\n' +
+                                 '4. Há problemas de CORS?';
+                } else if (error.message.includes('404')) {
+                    errorMessage = 'Webhook não encontrado (404). Verifique se:\n' +
+                                 '1. A URL está correta\n' +
+                                 '2. O workflow está ativado\n' +
+                                 '3. O caminho do webhook está correto';
+                } else if (error.message.includes('500')) {
+                    errorMessage = 'Erro no servidor n8n (500). Verifique:\n' +
+                                 '1. Os logs do n8n\n' +
+                                 '2. Se a Evolution API está rodando\n' +
+                                 '3. Se as credenciais estão corretas';
+                }
+                
+                showStatus(`❌ ${errorMessage}`, 'error');
                 progressFill.style.width = '0%';
             } finally {
                 sendBtn.disabled = false;
@@ -607,6 +698,9 @@
             statusDiv.className = `status ${type}`;
             statusDiv.style.display = 'block';
         }
+
+        // Log inicial
+        addLog('✅ Sistema carregado e pronto para uso!', 'success');
     </script>
 </body>
 </html>
