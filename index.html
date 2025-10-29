@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disparador WhatsApp em Massa - Avançado</title>
+    <title>Disparador WhatsApp - Evolution API</title>
     <style>
         * {
             margin: 0;
@@ -19,133 +19,372 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
-            padding: 40px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
         }
 
-        h1 {
-            color: #333;
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
             margin-bottom: 10px;
-            text-align: center;
         }
 
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .config-section {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #495057;
+            font-size: 0.9em;
+        }
+
+        .form-group input {
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .status.connected {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.disconnected {
+            background: #f8d7da;
+            color: #721c24;
         }
 
         .tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #e0e0e0;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            overflow-x: auto;
         }
 
         .tab {
-            padding: 12px 24px;
-            background: none;
-            border: none;
-            color: #666;
-            font-size: 16px;
-            font-weight: 600;
+            padding: 15px 30px;
             cursor: pointer;
-            border-bottom: 3px solid transparent;
+            border: none;
+            background: none;
+            font-size: 1em;
+            font-weight: 600;
+            color: #6c757d;
             transition: all 0.3s;
+            white-space: nowrap;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+            color: #495057;
         }
 
         .tab.active {
             color: #667eea;
             border-bottom-color: #667eea;
+            background: white;
         }
 
         .tab-content {
             display: none;
+            padding: 30px;
         }
 
         .tab-content.active {
             display: block;
         }
 
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
-        }
-
-        textarea, input, select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-
-        textarea:focus, input:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 120px;
-            font-family: inherit;
-        }
-
-        .help-text {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .file-upload {
-            position: relative;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .file-upload input[type="file"] {
-            display: none;
-        }
-
-        .file-upload-label {
+        .contacts-header {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .contacts-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
             padding: 15px;
             background: #f8f9fa;
-            border: 2px dashed #667eea;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: white;
             border-radius: 8px;
-            cursor: pointer;
+            margin-bottom: 10px;
             transition: all 0.3s;
         }
 
-        .file-upload-label:hover {
-            background: #e7e9fc;
+        .contact-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transform: translateX(5px);
         }
 
-        .file-name {
-            margin-top: 10px;
-            padding: 10px;
-            background: #e7f3ff;
-            border-radius: 5px;
-            font-size: 13px;
-            color: #0066cc;
+        .contact-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .contact-number {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .contact-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .badge-contact {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .badge-group {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            opacity: 0.9;
+            font-size: 0.9em;
+        }
+
+        .message-config {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .message-config h3 {
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .media-options {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .media-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .media-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .media-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .media-upload {
+            margin-top: 15px;
+            padding: 20px;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            text-align: center;
+            background: white;
+        }
+
+        .file-input {
             display: none;
         }
 
-        .media-preview {
+        .upload-label {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .upload-label:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .file-preview {
             margin-top: 15px;
             padding: 15px;
             background: #f8f9fa;
@@ -153,69 +392,14 @@
             display: none;
         }
 
-        .media-preview img, .media-preview video {
-            max-width: 100%;
-            max-height: 300px;
+        .file-preview.show {
+            display: block;
+        }
+
+        .file-preview img {
+            max-width: 200px;
+            max-height: 200px;
             border-radius: 8px;
-        }
-
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .status {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .status.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .status.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .status.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
         }
 
         .progress-container {
@@ -223,484 +407,1116 @@
             display: none;
         }
 
+        .progress-container.show {
+            display: block;
+        }
+
         .progress-bar {
             width: 100%;
             height: 30px;
-            background: #e0e0e0;
+            background: #e9ecef;
             border-radius: 15px;
             overflow: hidden;
+            position: relative;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            width: 0%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
             transition: width 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 600;
-            font-size: 12px;
+            font-size: 0.9em;
+        }
+
+        .progress-info {
+            margin-top: 10px;
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+
+        .log-container {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            background: #212529;
+            color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid #495057;
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-time {
+            color: #6c757d;
+            margin-right: 10px;
+        }
+
+        .log-success {
+            color: #28a745;
+        }
+
+        .log-error {
+            color: #dc3545;
+        }
+
+        .log-info {
+            color: #17a2b8;
         }
 
         .loading {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
+            border: 3px solid rgba(102, 126, 234, 0.3);
             border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
+            border-top-color: #667eea;
+            animation: spin 1s linear infinite;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        .download-template {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 8px 16px;
-            background: #28a745;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 13px;
-            transition: background 0.3s;
-            cursor: pointer;
+        .manual-input {
+            margin-top: 15px;
         }
 
-        .download-template:hover {
-            background: #218838;
+        .manual-input textarea {
+            min-height: 200px;
         }
 
-        .console-log {
-            margin-top: 20px;
+        .help-text {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-top: 8px;
+        }
+
+        .alert {
             padding: 15px;
-            background: #1e1e1e;
-            color: #00ff00;
             border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            max-height: 200px;
-            overflow-y: auto;
-            display: none;
+            margin-bottom: 20px;
         }
 
-        .console-log-title {
-            color: #00ff00;
-            font-weight: bold;
-            margin-bottom: 10px;
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .delay-config {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .delay-config label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .delay-config input {
+            width: 100px;
+            padding: 8px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contacts-header {
+                flex-direction: column;
+            }
+
+            .media-options {
+                flex-direction: column;
+            }
+
+            .media-btn {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📱 Disparador WhatsApp em Massa</h1>
-        <p class="subtitle">Envie mensagens, imagens e vídeos com intervalo personalizado</p>
+        <div class="header">
+            <h1>📱 Disparador WhatsApp</h1>
+            <p>Evolution API - Envio em Massa Profissional</p>
+        </div>
+
+        <div class="config-section">
+            <div class="config-grid">
+                <div class="form-group">
+                    <label>🔗 URL da Evolution API</label>
+                    <input type="text" id="apiUrl" placeholder="https://sua-api.com" value="https://evoapi.automacaocomia.pro">
+                </div>
+                <div class="form-group">
+                    <label>🔑 API Key</label>
+                    <input type="password" id="apiKey" placeholder="Sua API Key">
+                </div>
+                <div class="form-group">
+                    <label>📱 Nome da Instância</label>
+                    <input type="text" id="instanceName" placeholder="atendimento" value="atendimento">
+                </div>
+            </div>
+            <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="connectAPI()">🔌 Conectar</button>
+                <span class="status disconnected" id="connectionStatus">
+                    ⚫ Desconectado
+                </span>
+            </div>
+        </div>
 
         <div class="tabs">
-            <button class="tab active" onclick="switchTab('manual')">✍️ Manual</button>
-            <button class="tab" onclick="switchTab('planilha')">📊 Planilha</button>
+            <button class="tab active" onclick="switchTab('api')">🌐 Todos da API</button>
+            <button class="tab" onclick="switchTab('contacts')">👥 Apenas Contatos</button>
+            <button class="tab" onclick="switchTab('conversations')">💬 Apenas Conversas</button>
+            <button class="tab" onclick="switchTab('groups')">👥 Apenas Grupos</button>
+            <button class="tab" onclick="switchTab('spreadsheet')">📊 Planilha</button>
+            <button class="tab" onclick="switchTab('manual')">✍️ Manual</button>
         </div>
 
-        <form id="whatsappForm">
-            <div class="form-group">
-                <label for="webhookUrl">URL do Webhook n8n:</label>
-                <input type="url" id="webhookUrl" required 
-                       placeholder="https://seu-n8n.com/webhook/whatsapp-sender">
-                <div class="help-text">⚠️ Use a URL de PRODUÇÃO (não a de teste). O workflow deve estar ATIVADO!</div>
+        <!-- ABA: TODOS DA API -->
+        <div id="tab-api" class="tab-content active">
+            <div class="alert alert-info">
+                <strong>ℹ️ Modo: Todos da API</strong><br>
+                Busca automaticamente todos os contatos, conversas e grupos da sua instância WhatsApp.
             </div>
 
-            <!-- Tab Manual -->
-            <div id="manual-tab" class="tab-content active">
-                <div class="form-group">
-                    <label for="contacts">Números de WhatsApp:</label>
-                    <textarea id="contacts" 
-                              placeholder="5511999999999
-5511888888888
-5511777777777"></textarea>
-                    <div class="help-text">Um número por linha (formato: DDI + DDD + Número, sem espaços)</div>
+            <div class="contacts-header">
+                <input type="text" class="search-box" id="searchBox" placeholder="🔍 Buscar contato..." onkeyup="filterContacts()">
+                <button class="btn btn-success" onclick="fetchContacts()">🔄 Buscar Contatos</button>
+                <button class="btn btn-primary" onclick="selectAll()">✅ Selecionar Todos</button>
+                <button class="btn btn-danger" onclick="clearSelection()">❌ Limpar Seleção</button>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalContacts">0</div>
+                    <div class="stat-label">Total de Contatos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="selectedContacts">0</div>
+                    <div class="stat-label">Selecionados</div>
                 </div>
             </div>
 
-            <!-- Tab Planilha -->
-            <div id="planilha-tab" class="tab-content">
-                <div class="form-group">
-                    <label>Upload de Planilha (CSV ou Excel):</label>
-                    <div class="file-upload">
-                        <input type="file" id="spreadsheet" accept=".csv,.xlsx,.xls" onchange="handleSpreadsheet(event)">
-                        <label for="spreadsheet" class="file-upload-label">
-                            <span>📁</span>
-                            <span>Clique para selecionar a planilha</span>
-                        </label>
-                    </div>
-                    <div id="fileName" class="file-name"></div>
-                    <a class="download-template" onclick="downloadTemplate()">⬇️ Baixar Modelo de Planilha</a>
-                    <div class="help-text">A planilha deve ter uma coluna "numero" (obrigatório) e opcionalmente "nome"</div>
-                </div>
+            <div class="contacts-list" id="contactsList">
+                <p style="text-align: center; color: #6c757d;">Clique em "Buscar Contatos" para carregar</p>
             </div>
 
-            <div class="form-group">
-                <label for="mediaType">Tipo de Mensagem:</label>
-                <select id="mediaType" onchange="toggleMediaUpload()">
-                    <option value="text">Apenas Texto</option>
-                    <option value="image">Imagem</option>
-                    <option value="video">Vídeo</option>
-                </select>
-            </div>
+            <div class="message-config">
+                <h3>💬 Configurar Mensagem</h3>
+                <textarea id="messageText" placeholder="Digite sua mensagem aqui..."></textarea>
 
-            <div id="mediaUploadSection" class="form-group" style="display: none;">
-                <label>Upload de Mídia:</label>
-                <div class="file-upload">
-                    <input type="file" id="mediaFile" accept="image/*,video/*" onchange="handleMediaUpload(event)">
-                    <label for="mediaFile" class="file-upload-label">
-                        <span>🖼️</span>
-                        <span>Clique para selecionar imagem ou vídeo</span>
-                    </label>
-                </div>
-                <div id="mediaFileName" class="file-name"></div>
-                <div id="mediaPreview" class="media-preview"></div>
-                <div class="help-text">Ou cole a URL da mídia abaixo:</div>
-                <input type="url" id="mediaUrl" placeholder="https://exemplo.com/imagem.jpg">
-            </div>
-
-            <div class="form-group">
-                <label for="message">Mensagem:</label>
-                <textarea id="message" required 
-                          placeholder="Olá! Esta é uma mensagem automática..."></textarea>
-                <div class="help-text">Use {nome} para personalizar com o nome do contato (se disponível na planilha)</div>
-            </div>
-
-            <div class="row">
-                <div class="form-group">
-                    <label for="delay">Intervalo entre mensagens (segundos):</label>
-                    <input type="number" id="delay" value="5" min="1" max="300" required>
-                    <div class="help-text">Recomendado: 5-10 segundos para evitar bloqueios</div>
+                <div class="delay-config">
+                    <label>⏱️ Delay entre mensagens (segundos):</label>
+                    <input type="number" id="messageDelay" value="3" min="1" max="60">
+                    <span class="help-text">Recomendado: 3-5 segundos</span>
                 </div>
 
-                <div class="form-group">
-                    <label for="totalContacts">Total de Contatos:</label>
-                    <input type="text" id="totalContacts" value="0" readonly style="background: #f8f9fa;">
+                <h4 style="margin-top: 20px; margin-bottom: 10px;">📎 Tipo de Mídia</h4>
+                <div class="media-options">
+                    <button class="media-btn active" onclick="selectMediaType('text')">📝 Apenas Texto</button>
+                    <button class="media-btn" onclick="selectMediaType('image')">🖼️ Imagem</button>
+                    <button class="media-btn" onclick="selectMediaType('video')">🎥 Vídeo</button>
                 </div>
+
+                <div class="media-upload" id="mediaUpload" style="display: none;">
+                    <input type="file" id="mediaFile" class="file-input" accept="image/*,video/*" onchange="previewMedia()">
+                    <label for="mediaFile" class="upload-label">📁 Escolher Arquivo</label>
+                    <p class="help-text">Ou cole a URL da mídia abaixo:</p>
+                    <input type="text" id="mediaUrl" placeholder="https://exemplo.com/imagem.jpg" style="width: 100%; margin-top: 10px; padding: 10px; border: 2px solid #dee2e6; border-radius: 8px;">
+                    <div class="file-preview" id="filePreview"></div>
+                </div>
+
+                <button class="btn btn-success" onclick="sendMessages()" style="width: 100%; margin-top: 20px; padding: 15px; font-size: 1.1em;">
+                    🚀 Enviar Mensagens
+                </button>
             </div>
 
-            <button type="submit" id="sendBtn">
-                🚀 Iniciar Envio
-            </button>
-        </form>
-
-        <div class="progress-container" id="progressContainer">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progressFill">0%</div>
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill">0%</div>
+                </div>
+                <div class="progress-info" id="progressInfo">Aguardando...</div>
             </div>
+
+            <div class="log-container" id="logContainer"></div>
         </div>
 
-        <div id="status" class="status"></div>
+        <!-- ABA: APENAS CONTATOS -->
+        <div id="tab-contacts" class="tab-content">
+            <div class="alert alert-info">
+                <strong>ℹ️ Modo: Apenas Contatos</strong><br>
+                Busca apenas contatos individuais (sem grupos).
+            </div>
+            <p style="text-align: center; padding: 40px; color: #6c757d;">
+                Esta aba filtra apenas contatos individuais da API.<br>
+                Use a aba "Todos da API" e os contatos serão filtrados automaticamente.
+            </p>
+        </div>
 
-        <div id="consoleLog" class="console-log">
-            <div class="console-log-title">📋 Log de Depuração:</div>
-            <div id="consoleLogContent"></div>
+        <!-- ABA: APENAS CONVERSAS -->
+        <div id="tab-conversations" class="tab-content">
+            <div class="alert alert-info">
+                <strong>ℹ️ Modo: Apenas Conversas</strong><br>
+                Busca apenas conversas ativas (sem grupos).
+            </div>
+            <p style="text-align: center; padding: 40px; color: #6c757d;">
+                Esta aba filtra apenas conversas ativas da API.<br>
+                Use a aba "Todos da API" e as conversas serão filtradas automaticamente.
+            </p>
+        </div>
+
+        <!-- ABA: APENAS GRUPOS -->
+        <div id="tab-groups" class="tab-content">
+            <div class="alert alert-info">
+                <strong>ℹ️ Modo: Apenas Grupos</strong><br>
+                Busca apenas grupos do WhatsApp.
+            </div>
+            <p style="text-align: center; padding: 40px; color: #6c757d;">
+                Esta aba filtra apenas grupos da API.<br>
+                Use a aba "Todos da API" e os grupos serão filtrados automaticamente.
+            </p>
+        </div>
+
+        <!-- ABA: PLANILHA -->
+        <div id="tab-spreadsheet" class="tab-content">
+            <div class="alert alert-info">
+                <strong>ℹ️ Modo: Upload de Planilha</strong><br>
+                Faça upload de um arquivo CSV ou TXT com números de telefone (um por linha).
+            </div>
+
+            <div class="media-upload">
+                <input type="file" id="spreadsheetFile" class="file-input" accept=".csv,.txt" onchange="loadSpreadsheet()">
+                <label for="spreadsheetFile" class="upload-label">📊 Escolher Planilha</label>
+                <p class="help-text">Formato: Um número por linha (ex: 5511999999999)</p>
+            </div>
+
+            <div class="contacts-list" id="spreadsheetList" style="margin-top: 20px;">
+                <p style="text-align: center; color: #6c757d;">Nenhuma planilha carregada</p>
+            </div>
+
+            <div class="message-config" style="margin-top: 20px;">
+                <h3>💬 Configurar Mensagem</h3>
+                <textarea id="messageTextSpreadsheet" placeholder="Digite sua mensagem aqui..."></textarea>
+
+                <div class="delay-config">
+                    <label>⏱️ Delay entre mensagens (segundos):</label>
+                    <input type="number" id="messageDelaySpreadsheet" value="3" min="1" max="60">
+                </div>
+
+                <h4 style="margin-top: 20px; margin-bottom: 10px;">📎 Tipo de Mídia</h4>
+                <div class="media-options">
+                    <button class="media-btn active" onclick="selectMediaType('text', 'spreadsheet')">📝 Apenas Texto</button>
+                    <button class="media-btn" onclick="selectMediaType('image', 'spreadsheet')">🖼️ Imagem</button>
+                    <button class="media-btn" onclick="selectMediaType('video', 'spreadsheet')">🎥 Vídeo</button>
+                </div>
+
+                <div class="media-upload" id="mediaUploadSpreadsheet" style="display: none;">
+                    <input type="file" id="mediaFileSpreadsheet" class="file-input" accept="image/*,video/*" onchange="previewMedia('spreadsheet')">
+                    <label for="mediaFileSpreadsheet" class="upload-label">📁 Escolher Arquivo</label>
+                    <p class="help-text">Ou cole a URL da mídia abaixo:</p>
+                    <input type="text" id="mediaUrlSpreadsheet" placeholder="https://exemplo.com/imagem.jpg" style="width: 100%; margin-top: 10px; padding: 10px; border: 2px solid #dee2e6; border-radius: 8px;">
+                    <div class="file-preview" id="filePreviewSpreadsheet"></div>
+                </div>
+
+                <button class="btn btn-success" onclick="sendMessagesSpreadsheet()" style="width: 100%; margin-top: 20px; padding: 15px; font-size: 1.1em;">
+                    🚀 Enviar Mensagens
+                </button>
+            </div>
+
+            <div class="progress-container" id="progressContainerSpreadsheet">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFillSpreadsheet">0%</div>
+                </div>
+                <div class="progress-info" id="progressInfoSpreadsheet">Aguardando...</div>
+            </div>
+
+            <div class="log-container" id="logContainerSpreadsheet"></div>
+        </div>
+
+        <!-- ABA: MANUAL -->
+        <div id="tab-manual" class="tab-content">
+            <div class="alert alert-info">
+                <strong>ℹ️ Modo: Entrada Manual</strong><br>
+                Digite os números manualmente, um por linha.
+            </div>
+
+            <div class="manual-input">
+                <label style="font-weight: 600; margin-bottom: 10px; display: block;">📝 Digite os números (um por linha):</label>
+                <textarea id="manualNumbers" placeholder="5511999999999&#10;5511888888888&#10;5511777777777"></textarea>
+                <p class="help-text">Formato: Código do país + DDD + número (ex: 5511999999999)</p>
+            </div>
+
+            <div class="message-config" style="margin-top: 20px;">
+                <h3>💬 Configurar Mensagem</h3>
+                <textarea id="messageTextManual" placeholder="Digite sua mensagem aqui..."></textarea>
+
+                <div class="delay-config">
+                    <label>⏱️ Delay entre mensagens (segundos):</label>
+                    <input type="number" id="messageDelayManual" value="3" min="1" max="60">
+                </div>
+
+                <h4 style="margin-top: 20px; margin-bottom: 10px;">📎 Tipo de Mídia</h4>
+                <div class="media-options">
+                    <button class="media-btn active" onclick="selectMediaType('text', 'manual')">📝 Apenas Texto</button>
+                    <button class="media-btn" onclick="selectMediaType('image', 'manual')">🖼️ Imagem</button>
+                    <button class="media-btn" onclick="selectMediaType('video', 'manual')">🎥 Vídeo</button>
+                </div>
+
+                <div class="media-upload" id="mediaUploadManual" style="display: none;">
+                    <input type="file" id="mediaFileManual" class="file-input" accept="image/*,video/*" onchange="previewMedia('manual')">
+                    <label for="mediaFileManual" class="upload-label">📁 Escolher Arquivo</label>
+                    <p class="help-text">Ou cole a URL da mídia abaixo:</p>
+                    <input type="text" id="mediaUrlManual" placeholder="https://exemplo.com/imagem.jpg" style="width: 100%; margin-top: 10px; padding: 10px; border: 2px solid #dee2e6; border-radius: 8px;">
+                    <div class="file-preview" id="filePreviewManual"></div>
+                </div>
+
+                <button class="btn btn-success" onclick="sendMessagesManual()" style="width: 100%; margin-top: 20px; padding: 15px; font-size: 1.1em;">
+                    🚀 Enviar Mensagens
+                </button>
+            </div>
+
+            <div class="progress-container" id="progressContainerManual">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFillManual">0%</div>
+                </div>
+                <div class="progress-info" id="progressInfoManual">Aguardando...</div>
+            </div>
+
+            <div class="log-container" id="logContainerManual"></div>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
-        let contactsList = [];
-        let mediaBase64 = '';
+        // Configuração da API
+        let apiConfig = {
+            url: '',
+            key: '',
+            instance: '',
+            connected: false
+        };
 
-        // Função para adicionar log visual
-        function addLog(message, type = 'info') {
-            const consoleLog = document.getElementById('consoleLog');
-            const consoleLogContent = document.getElementById('consoleLogContent');
-            consoleLog.style.display = 'block';
-            
-            const timestamp = new Date().toLocaleTimeString();
-            const color = type === 'error' ? '#ff4444' : type === 'success' ? '#00ff00' : '#00ccff';
-            
-            consoleLogContent.innerHTML += `<div style="color: ${color};">[${timestamp}] ${message}</div>`;
-            consoleLogContent.scrollTop = consoleLogContent.scrollHeight;
-            
-            console.log(`[${timestamp}] ${message}`);
+        // Dados
+        let allContacts = [];
+        let selectedMediaType = 'text';
+        let currentMode = 'api';
+
+        // Conectar à API
+        function connectAPI() {
+            const url = document.getElementById('apiUrl').value.trim();
+            const key = document.getElementById('apiKey').value.trim();
+            const instance = document.getElementById('instanceName').value.trim();
+
+            if (!url || !key || !instance) {
+                alert('❌ Preencha todos os campos!');
+                return;
+            }
+
+            apiConfig.url = url.replace(/\/$/, ''); // Remove barra final
+            apiConfig.key = key;
+            apiConfig.instance = instance;
+            apiConfig.connected = true;
+
+            document.getElementById('connectionStatus').className = 'status connected';
+            document.getElementById('connectionStatus').innerHTML = '🟢 Conectado';
+
+            addLog('✅ Conectado à Evolution API!', 'success');
+            alert('✅ Conectado com sucesso!');
         }
 
+        // Buscar contatos da API - VERSÃO COMPLETA PARA EVOLUTION API 2.3.5
+        async function fetchContacts() {
+            if (!apiConfig.connected) {
+                alert('❌ Conecte-se à API primeiro!');
+                return;
+            }
+
+            addLog('Buscando contatos e conversas da Evolution API 2.3.5...', 'info');
+            document.getElementById('contactsList').innerHTML = '<p style="text-align: center;"><span class="loading"></span> Carregando...</p>';
+
+            try {
+                allContacts = [];
+                const uniqueNumbers = new Set();
+                const encodedInstance = encodeURIComponent(apiConfig.instance);
+
+                // LISTA DE ENDPOINTS PARA TESTAR (Evolution API 2.3.5)
+                const endpoints = [
+                    `/chat/findChats/${encodedInstance}`,
+                    `/chat/fetchAllContacts/${encodedInstance}`,
+                    `/contact/fetchProfile/${encodedInstance}`,
+                    `/instance/fetchContacts/${encodedInstance}`,
+                ];
+
+                let successCount = 0;
+
+                // TENTAR CADA ENDPOINT
+                for (const endpoint of endpoints) {
+                    try {
+                        const url = `${apiConfig.url}${endpoint}`;
+                        console.log('🔍 Tentando:', url);
+                        addLog(`Testando: ${endpoint}`, 'info');
+
+                        const response = await fetch(url, {
+                            method: 'GET',
+                            headers: { 
+                                'apikey': apiConfig.key,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        console.log(`Status ${endpoint}:`, response.status);
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            console.log(`Dados de ${endpoint}:`, data);
+
+                            // Processar resposta (diferentes formatos)
+                            let items = [];
+                            
+                            if (Array.isArray(data)) {
+                                items = data;
+                            } else if (data.data && Array.isArray(data.data)) {
+                                items = data.data;
+                            } else if (data.chats && Array.isArray(data.chats)) {
+                                items = data.chats;
+                            } else if (data.contacts && Array.isArray(data.contacts)) {
+                                items = data.contacts;
+                            } else if (data.response && Array.isArray(data.response)) {
+                                items = data.response;
+                            }
+
+                            console.log(`${items.length} itens encontrados em ${endpoint}`);
+
+                            // Processar cada item
+                            items.forEach(item => {
+                                let number = '';
+                                let name = '';
+                                let type = 'contact';
+
+                                // Extrair ID/número (múltiplos formatos)
+                                if (item.id) {
+                                    if (item.id.includes('@g.us')) {
+                                        number = item.id;
+                                        type = 'group';
+                                    } else if (item.id.includes('@s.whatsapp.net')) {
+                                        number = item.id.replace('@s.whatsapp.net', '');
+                                    } else if (item.id.includes('@c.us')) {
+                                        number = item.id.replace('@c.us', '');
+                                    } else {
+                                        number = item.id;
+                                    }
+                                } else if (item.jid) {
+                                    if (item.jid.includes('@g.us')) {
+                                        number = item.jid;
+                                        type = 'group';
+                                    } else {
+                                        number = item.jid.replace('@s.whatsapp.net', '').replace('@c.us', '');
+                                    }
+                                } else if (item.number) {
+                                    number = item.number;
+                                } else if (item.remoteJid) {
+                                    number = item.remoteJid.replace('@s.whatsapp.net', '').replace('@c.us', '');
+                                }
+
+                                // Extrair nome
+                                name = item.pushName || item.name || item.notify || item.verifiedName || number;
+
+                                // Adicionar se válido e único
+                                if (number && !uniqueNumbers.has(number)) {
+                                    uniqueNumbers.add(number);
+                                    allContacts.push({
+                                        number: number,
+                                        name: name,
+                                        type: type,
+                                        id: item.id || item.jid || number
+                                    });
+                                }
+                            });
+
+                            if (items.length > 0) {
+                                successCount++;
+                                addLog(`✅ ${items.length} itens de ${endpoint}`, 'success');
+                            }
+                        } else {
+                            const errorData = await response.json();
+                            console.error(`Erro em ${endpoint}:`, errorData);
+                        }
+
+                    } catch (error) {
+                        console.error(`Erro em ${endpoint}:`, error);
+                    }
+                }
+
+                // VERIFICAR SE ENCONTROU ALGO
+                if (allContacts.length === 0) {
+                    // Tentar buscar mensagens recentes como último recurso
+                    try {
+                        addLog('Tentando buscar mensagens recentes...', 'info');
+                        const messagesUrl = `${apiConfig.url}/chat/findMessages/${encodedInstance}`;
+                        console.log('🔍 Tentando mensagens:', messagesUrl);
+
+                        const messagesResponse = await fetch(messagesUrl, {
+                            method: 'POST',
+                            headers: { 
+                                'apikey': apiConfig.key,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                limit: 100
+                            })
+                        });
+
+                        if (messagesResponse.ok) {
+                            const messagesData = await messagesResponse.json();
+                            console.log('Mensagens:', messagesData);
+
+                            let messages = [];
+                            if (Array.isArray(messagesData)) {
+                                messages = messagesData;
+                            } else if (messagesData.data && Array.isArray(messagesData.data)) {
+                                messages = messagesData.data;
+                            } else if (messagesData.messages && Array.isArray(messagesData.messages)) {
+                                messages = messagesData.messages;
+                            }
+
+                            messages.forEach(msg => {
+                                if (msg.key && msg.key.remoteJid) {
+                                    const jid = msg.key.remoteJid;
+                                    let number = '';
+                                    let type = 'chat';
+
+                                    if (jid.includes('@g.us')) {
+                                        number = jid;
+                                        type = 'group';
+                                    } else {
+                                        number = jid.replace('@s.whatsapp.net', '').replace('@c.us', '');
+                                    }
+
+                                    if (number && !uniqueNumbers.has(number)) {
+                                        uniqueNumbers.add(number);
+                                        allContacts.push({
+                                            number: number,
+                                            name: msg.pushName || number,
+                                            type: type,
+                                            id: jid
+                                        });
+                                    }
+                                }
+                            });
+
+                            if (messages.length > 0) {
+                                addLog(`✅ ${messages.length} conversas de mensagens`, 'success');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Erro ao buscar mensagens:', error);
+                    }
+                }
+
+                // RESULTADO FINAL
+                if (allContacts.length === 0) {
+                    throw new Error('Nenhum contato/conversa encontrado. Verifique se:\n1. A instância está conectada ao WhatsApp\n2. Há conversas/contatos no WhatsApp\n3. A API Key tem permissões corretas');
+                }
+
+                console.log('✅ Total de contatos únicos:', allContacts.length);
+                addLog(`🎉 ${allContacts.length} contatos/conversas carregados!`, 'success');
+                updateStats();
+                renderContacts();
+
+            } catch (error) {
+                console.error('❌ Erro completo:', error);
+                addLog('❌ Erro: ' + error.message, 'error');
+                
+                document.getElementById('contactsList').innerHTML = `
+                    <div style="padding: 20px; text-align: left;">
+                        <h4 style="color: #ff4444; margin-bottom: 15px;">❌ Não foi possível buscar contatos</h4>
+                        <p style="margin-bottom: 10px;"><strong>Erro:</strong> ${error.message}</p>
+                        
+                        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                            <p style="margin-bottom: 10px;"><strong>🔍 Verifique:</strong></p>
+                            <ol style="margin-left: 20px; line-height: 1.8;">
+                                <li><strong>Instância conectada?</strong> Acesse o painel da Evolution API e veja se a instância "atendimento" está com status "open"</li>
+                                <li><strong>WhatsApp tem conversas?</strong> Abra o WhatsApp Web e veja se há conversas/contatos</li>
+                                <li><strong>API Key correta?</strong> Verifique se a API Key tem permissões de leitura</li>
+                                <li><strong>Nome da instância:</strong> Confirme que é exatamente "atendimento" (minúsculo, sem espaços)</li>
+                            </ol>
+                        </div>
+
+                        <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                            <p style="margin-bottom: 10px;"><strong>🧪 Teste manual:</strong></p>
+                            <p style="font-size: 12px; margin-bottom: 5px;">Abra uma nova aba e teste esta URL:</p>
+                            <code style="background: #fff; padding: 8px; border-radius: 4px; display: block; font-size: 11px; word-break: break-all; margin-top: 5px;">
+                                ${apiConfig.url}/chat/findChats/${encodeURIComponent(apiConfig.instance)}
+                            </code>
+                            <p style="font-size: 12px; margin-top: 10px; color: #666;">
+                                Adicione o header: <code style="background: #fff; padding: 2px 6px;">apikey: SUA_API_KEY</code>
+                            </p>
+                        </div>
+
+                        <div style="background: #f0fff4; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                            <p style="margin-bottom: 10px;"><strong>💡 Alternativa:</strong></p>
+                            <p>Se a instância não tem conversas ainda, use a aba <strong>"📊 Planilha"</strong> ou <strong>"✍️ Manual"</strong> para adicionar números manualmente.</p>
+                        </div>
+
+                        <button class="btn" onclick="fetchContacts()" style="margin-top: 15px;">🔄 Tentar Novamente</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Renderizar lista de contatos
+        function renderContacts() {
+            const container = document.getElementById('contactsList');
+            
+            if (allContacts.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6c757d;">Nenhum contato encontrado</p>';
+                return;
+            }
+
+            let html = '';
+            allContacts.forEach((contact, index) => {
+                const badgeClass = contact.type === 'group' ? 'badge-group' : 'badge-contact';
+                const badgeText = contact.type === 'group' ? '👥 Grupo' : '👤 Contato';
+                
+                html += `
+                    <div class="contact-item">
+                        <input type="checkbox" id="contact-${index}" onchange="updateStats()">
+                        <div class="contact-info">
+                            <div class="contact-name">${contact.name}</div>
+                            <div class="contact-number">${contact.number}</div>
+                        </div>
+                        <span class="contact-badge ${badgeClass}">${badgeText}</span>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Atualizar estatísticas
+        function updateStats() {
+            const total = allContacts.length;
+            const selected = document.querySelectorAll('#contactsList input[type="checkbox"]:checked').length;
+            
+            document.getElementById('totalContacts').textContent = total;
+            document.getElementById('selectedContacts').textContent = selected;
+        }
+
+        // Selecionar todos
+        function selectAll() {
+            document.querySelectorAll('#contactsList input[type="checkbox"]').forEach(cb => {
+                cb.checked = true;
+            });
+            updateStats();
+        }
+
+        // Limpar seleção
+        function clearSelection() {
+            document.querySelectorAll('#contactsList input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            updateStats();
+        }
+
+        // Filtrar contatos
+        function filterContacts() {
+            const search = document.getElementById('searchBox').value.toLowerCase();
+            const items = document.querySelectorAll('.contact-item');
+            
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(search) ? 'flex' : 'none';
+            });
+        }
+
+        // Trocar aba
         function switchTab(tab) {
+            // Remover active de todas as abas
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             
+            // Ativar aba selecionada
             event.target.classList.add('active');
-            document.getElementById(tab + '-tab').classList.add('active');
+            document.getElementById(`tab-${tab}`).classList.add('active');
             
-            updateContactCount();
+            currentMode = tab;
         }
 
-        function toggleMediaUpload() {
-            const mediaType = document.getElementById('mediaType').value;
-            const mediaSection = document.getElementById('mediaUploadSection');
+        // Selecionar tipo de mídia
+        function selectMediaType(type, mode = 'api') {
+            selectedMediaType = type;
             
-            if (mediaType === 'text') {
-                mediaSection.style.display = 'none';
+            const suffix = mode === 'api' ? '' : mode.charAt(0).toUpperCase() + mode.slice(1);
+            const buttons = document.querySelectorAll(`#tab-${mode} .media-btn`);
+            const mediaUpload = document.getElementById(`mediaUpload${suffix}`);
+            
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            if (type === 'text') {
+                mediaUpload.style.display = 'none';
             } else {
-                mediaSection.style.display = 'block';
+                mediaUpload.style.display = 'block';
+            }
+        }
+
+        // Preview de mídia
+        function previewMedia(mode = 'api') {
+            const suffix = mode === 'api' ? '' : mode.charAt(0).toUpperCase() + mode.slice(1);
+            const fileInput = document.getElementById(`mediaFile${suffix}`);
+            const preview = document.getElementById(`filePreview${suffix}`);
+            
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    if (file.type.startsWith('image/')) {
+                        preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                    } else if (file.type.startsWith('video/')) {
+                        preview.innerHTML = `<video src="${e.target.result}" controls style="max-width: 300px;"></video>`;
+                    }
+                    preview.classList.add('show');
+                };
+                
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Enviar mensagens (API)
+        async function sendMessages() {
+            if (!apiConfig.connected) {
+                alert('❌ Conecte-se à API primeiro!');
+                return;
+            }
+
+            const selectedContacts = [];
+            document.querySelectorAll('#contactsList input[type="checkbox"]:checked').forEach((cb, index) => {
+                const contactIndex = parseInt(cb.id.replace('contact-', ''));
+                selectedContacts.push(allContacts[contactIndex]);
+            });
+
+            if (selectedContacts.length === 0) {
+                alert('❌ Selecione pelo menos um contato!');
+                return;
+            }
+
+            const message = document.getElementById('messageText').value.trim();
+            if (!message) {
+                alert('❌ Digite uma mensagem!');
+                return;
+            }
+
+            const delay = parseInt(document.getElementById('messageDelay').value) * 1000;
+            
+            // Preparar mídia
+            let mediaUrl = '';
+            if (selectedMediaType !== 'text') {
+                const urlInput = document.getElementById('mediaUrl').value.trim();
                 const fileInput = document.getElementById('mediaFile');
-                fileInput.accept = mediaType === 'image' ? 'image/*' : 'video/*';
-            }
-        }
-
-        function handleSpreadsheet(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            document.getElementById('fileName').textContent = `📄 ${file.name}`;
-            document.getElementById('fileName').style.display = 'block';
-            addLog(`Lendo planilha: ${file.name}`);
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, { type: 'array' });
-                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-                    const jsonData = XLSX.utils.sheet_to_json(firstSheet);
-
-                    contactsList = jsonData.map(row => ({
-                        number: String(row.numero || row.number || row.telefone || '').replace(/\D/g, ''),
-                        name: row.nome || row.name || ''
-                    })).filter(contact => contact.number);
-
-                    updateContactCount();
-                    addLog(`✅ ${contactsList.length} contatos carregados da planilha!`, 'success');
-                    showStatus(`✅ ${contactsList.length} contatos carregados da planilha!`, 'success');
-                } catch (error) {
-                    addLog(`❌ Erro ao ler planilha: ${error.message}`, 'error');
-                    showStatus(`❌ Erro ao ler planilha: ${error.message}`, 'error');
-                }
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
-        function handleMediaUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            document.getElementById('mediaFileName').textContent = `📎 ${file.name}`;
-            document.getElementById('mediaFileName').style.display = 'block';
-            addLog(`Carregando mídia: ${file.name}`);
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                mediaBase64 = e.target.result;
                 
-                const preview = document.getElementById('mediaPreview');
-                preview.style.display = 'block';
-                
-                if (file.type.startsWith('image/')) {
-                    preview.innerHTML = `<img src="${mediaBase64}" alt="Preview">`;
-                } else if (file.type.startsWith('video/')) {
-                    preview.innerHTML = `<video controls src="${mediaBase64}"></video>`;
-                }
-                
-                addLog(`✅ Mídia carregada com sucesso!`, 'success');
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function updateContactCount() {
-            const manualContacts = document.getElementById('contacts').value
-                .split('\n')
-                .map(c => c.trim())
-                .filter(c => c.length > 0);
-            
-            const activeTab = document.querySelector('.tab.active').textContent;
-            const total = activeTab.includes('Manual') ? manualContacts.length : contactsList.length;
-            
-            document.getElementById('totalContacts').value = total;
-        }
-
-        document.getElementById('contacts').addEventListener('input', updateContactCount);
-
-        function downloadTemplate() {
-            event.preventDefault();
-            
-            const template = [
-                ['numero', 'nome'],
-                ['5511999999999', 'João Silva'],
-                ['5511888888888', 'Maria Santos'],
-                ['5511777777777', 'Pedro Oliveira']
-            ];
-
-            const ws = XLSX.utils.aoa_to_sheet(template);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Contatos');
-            XLSX.writeFile(wb, 'modelo_contatos_whatsapp.xlsx');
-            
-            addLog('✅ Modelo de planilha baixado!', 'success');
-        }
-
-        const form = document.getElementById('whatsappForm');
-        const statusDiv = document.getElementById('status');
-        const sendBtn = document.getElementById('sendBtn');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressFill = document.getElementById('progressFill');
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            // Limpar log anterior
-            document.getElementById('consoleLogContent').innerHTML = '';
-            document.getElementById('consoleLog').style.display = 'block';
-
-            const webhookUrl = document.getElementById('webhookUrl').value;
-            const message = document.getElementById('message').value;
-            const delay = parseInt(document.getElementById('delay').value);
-            const mediaType = document.getElementById('mediaType').value;
-            let mediaUrl = document.getElementById('mediaUrl')?.value || '';
-
-            addLog('🚀 Iniciando processo de envio...');
-            addLog(`Webhook URL: ${webhookUrl}`);
-
-            // Determinar lista de contatos
-            const activeTab = document.querySelector('.tab.active').textContent;
-            let contacts;
-            
-            if (activeTab.includes('Manual')) {
-                const contactsText = document.getElementById('contacts').value;
-                contacts = contactsText
-                    .split('\n')
-                    .map(c => c.trim())
-                    .filter(c => c.length > 0);
-                addLog(`Modo: Manual - ${contacts.length} contatos`);
-            } else {
-                contacts = contactsList.map(c => c.number);
-                addLog(`Modo: Planilha - ${contacts.length} contatos`);
-            }
-
-            if (contacts.length === 0) {
-                addLog('❌ Nenhum contato encontrado!', 'error');
-                showStatus('❌ Por favor, adicione pelo menos um contato.', 'error');
-                return;
-            }
-
-            // Usar base64 se foi feito upload
-            if (mediaBase64 && mediaType !== 'text') {
-                mediaUrl = mediaBase64;
-                addLog('Usando mídia em base64 (upload)');
-            } else if (mediaUrl) {
-                addLog(`Usando mídia por URL: ${mediaUrl}`);
-            }
-
-            // Validar mídia se necessário
-            if (mediaType !== 'text' && !mediaUrl) {
-                addLog('❌ Mídia não fornecida!', 'error');
-                showStatus('❌ Por favor, faça upload de uma mídia ou cole a URL.', 'error');
-                return;
-            }
-
-            // Desabilitar botão e mostrar progresso
-            sendBtn.disabled = true;
-            sendBtn.innerHTML = '<span class="loading"></span> Enviando...';
-            progressContainer.style.display = 'block';
-            showStatus(`📤 Iniciando envio para ${contacts.length} contato(s)...`, 'info');
-
-            // Preparar dados para envio
-            const payload = {
-                contacts: contacts,
-                message: message,
-                mediaUrl: mediaUrl,
-                mediaType: mediaType,
-                delay: delay
-            };
-
-            addLog('📦 Payload preparado:');
-            addLog(JSON.stringify(payload, null, 2));
-
-            try {
-                addLog('📡 Enviando requisição para o webhook...');
-                
-                const response = await fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                addLog(`📥 Resposta recebida - Status: ${response.status} ${response.statusText}`);
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    addLog(`❌ Erro na resposta: ${errorText}`, 'error');
-                    throw new Error(`Erro ${response.status}: ${errorText || response.statusText}`);
-                }
-
-                let result;
-                const contentType = response.headers.get('content-type');
-                
-                if (contentType && contentType.includes('application/json')) {
-                    result = await response.json();
-                    addLog('✅ Resposta JSON recebida:');
-                    addLog(JSON.stringify(result, null, 2), 'success');
+                if (urlInput) {
+                    mediaUrl = urlInput;
+                } else if (fileInput.files && fileInput.files[0]) {
+                    // Converter para base64
+                    const file = fileInput.files[0];
+                    mediaUrl = await fileToBase64(file);
                 } else {
-                    result = await response.text();
-                    addLog('✅ Resposta de texto recebida:');
-                    addLog(result, 'success');
+                    alert('❌ Adicione uma mídia ou escolha "Apenas Texto"!');
+                    return;
                 }
-
-                progressFill.style.width = '100%';
-                progressFill.textContent = '100%';
-                
-                // Calcular tempo estimado
-                const totalTime = contacts.length * delay;
-                const minutes = Math.floor(totalTime / 60);
-                const seconds = totalTime % 60;
-                
-                const successMessage = `✅ Processo iniciado com sucesso! ${contacts.length} mensagens serão enviadas com intervalo de ${delay}s. Tempo estimado: ${minutes}min ${seconds}s`;
-                
-                addLog(successMessage, 'success');
-                showStatus(successMessage, 'success');
-                
-            } catch (error) {
-                addLog(`❌ ERRO: ${error.message}`, 'error');
-                addLog(`Stack: ${error.stack}`, 'error');
-                
-                let errorMessage = error.message;
-                
-                // Mensagens de erro mais amigáveis
-                if (error.message.includes('Failed to fetch')) {
-                    errorMessage = 'Não foi possível conectar ao webhook. Verifique:\n' +
-                                 '1. A URL está correta?\n' +
-                                 '2. O workflow do n8n está ATIVADO?\n' +
-                                 '3. Você está usando a URL de PRODUÇÃO (não teste)?\n' +
-                                 '4. Há problemas de CORS?';
-                } else if (error.message.includes('404')) {
-                    errorMessage = 'Webhook não encontrado (404). Verifique se:\n' +
-                                 '1. A URL está correta\n' +
-                                 '2. O workflow está ativado\n' +
-                                 '3. O caminho do webhook está correto';
-                } else if (error.message.includes('500')) {
-                    errorMessage = 'Erro no servidor n8n (500). Verifique:\n' +
-                                 '1. Os logs do n8n\n' +
-                                 '2. Se a Evolution API está rodando\n' +
-                                 '3. Se as credenciais estão corretas';
-                }
-                
-                showStatus(`❌ ${errorMessage}`, 'error');
-                progressFill.style.width = '0%';
-            } finally {
-                sendBtn.disabled = false;
-                sendBtn.innerHTML = '🚀 Iniciar Envio';
             }
-        });
 
-        function showStatus(message, type) {
-            statusDiv.textContent = message;
-            statusDiv.className = `status ${type}`;
-            statusDiv.style.display = 'block';
+            // Iniciar envio
+            await sendBatch(selectedContacts, message, mediaUrl, delay, 'api');
         }
 
-        // Log inicial
-        addLog('✅ Sistema carregado e pronto para uso!', 'success');
+        // Enviar mensagens (Planilha)
+        async function sendMessagesSpreadsheet() {
+            if (!apiConfig.connected) {
+                alert('❌ Conecte-se à API primeiro!');
+                return;
+            }
+
+            if (allContacts.length === 0) {
+                alert('❌ Carregue uma planilha primeiro!');
+                return;
+            }
+
+            const message = document.getElementById('messageTextSpreadsheet').value.trim();
+            if (!message) {
+                alert('❌ Digite uma mensagem!');
+                return;
+            }
+
+            const delay = parseInt(document.getElementById('messageDelaySpreadsheet').value) * 1000;
+            
+            let mediaUrl = '';
+            if (selectedMediaType !== 'text') {
+                const urlInput = document.getElementById('mediaUrlSpreadsheet').value.trim();
+                const fileInput = document.getElementById('mediaFileSpreadsheet');
+                
+                if (urlInput) {
+                    mediaUrl = urlInput;
+                } else if (fileInput.files && fileInput.files[0]) {
+                    const file = fileInput.files[0];
+                    mediaUrl = await fileToBase64(file);
+                } else {
+                    alert('❌ Adicione uma mídia ou escolha "Apenas Texto"!');
+                    return;
+                }
+            }
+
+            await sendBatch(allContacts, message, mediaUrl, delay, 'spreadsheet');
+        }
+
+        // Enviar mensagens (Manual)
+        async function sendMessagesManual() {
+            if (!apiConfig.connected) {
+                alert('❌ Conecte-se à API primeiro!');
+                return;
+            }
+
+            const numbersText = document.getElementById('manualNumbers').value.trim();
+            if (!numbersText) {
+                alert('❌ Digite pelo menos um número!');
+                return;
+            }
+
+            const numbers = numbersText.split('\n').map(n => n.trim()).filter(n => n);
+            if (numbers.length === 0) {
+                alert('❌ Nenhum número válido encontrado!');
+                return;
+            }
+
+            const contacts = numbers.map(num => ({
+                number: num,
+                name: num,
+                type: 'contact',
+                id: num
+            }));
+
+            const message = document.getElementById('messageTextManual').value.trim();
+            if (!message) {
+                alert('❌ Digite uma mensagem!');
+                return;
+            }
+
+            const delay = parseInt(document.getElementById('messageDelayManual').value) * 1000;
+            
+            let mediaUrl = '';
+            if (selectedMediaType !== 'text') {
+                const urlInput = document.getElementById('mediaUrlManual').value.trim();
+                const fileInput = document.getElementById('mediaFileManual');
+                
+                if (urlInput) {
+                    mediaUrl = urlInput;
+                } else if (fileInput.files && fileInput.files[0]) {
+                    const file = fileInput.files[0];
+                    mediaUrl = await fileToBase64(file);
+                } else {
+                    alert('❌ Adicione uma mídia ou escolha "Apenas Texto"!');
+                    return;
+                }
+            }
+
+            await sendBatch(contacts, message, mediaUrl, delay, 'manual');
+        }
+
+        // Enviar lote de mensagens
+        async function sendBatch(contacts, message, mediaUrl, delay, mode) {
+            const suffix = mode === 'api' ? '' : mode.charAt(0).toUpperCase() + mode.slice(1);
+            const progressContainer = document.getElementById(`progressContainer${suffix}`);
+            const progressFill = document.getElementById(`progressFill${suffix}`);
+            const progressInfo = document.getElementById(`progressInfo${suffix}`);
+            
+            progressContainer.classList.add('show');
+            
+            let success = 0;
+            let failed = 0;
+
+            for (let i = 0; i < contacts.length; i++) {
+                const contact = contacts[i];
+                const progress = Math.round(((i + 1) / contacts.length) * 100);
+                
+                progressFill.style.width = progress + '%';
+                progressFill.textContent = progress + '%';
+                progressInfo.textContent = `Enviando ${i + 1} de ${contacts.length}...`;
+
+                try {
+                    // Formatar número
+                    let number = contact.number;
+                    if (contact.type === 'group') {
+                        // Grupo já vem com @g.us
+                        number = contact.id;
+                    } else {
+                        // Remover caracteres especiais
+                        number = number.replace(/\D/g, '');
+                        // Adicionar @s.whatsapp.net se não tiver
+                        if (!number.includes('@')) {
+                            number = number + '@s.whatsapp.net';
+                        }
+                    }
+
+                    // Preparar payload
+                    let endpoint = '';
+                    let payload = {};
+
+                    if (selectedMediaType === 'text') {
+                        endpoint = '/message/sendText/' + encodeURIComponent(apiConfig.instance);
+                        payload = {
+                            number: number,
+                            text: message
+                        };
+                    } else if (selectedMediaType === 'image') {
+                        endpoint = '/message/sendMedia/' + encodeURIComponent(apiConfig.instance);
+                        payload = {
+                            number: number,
+                            mediatype: 'image',
+                            media: mediaUrl,
+                            caption: message
+                        };
+                    } else if (selectedMediaType === 'video') {
+                        endpoint = '/message/sendMedia/' + encodeURIComponent(apiConfig.instance);
+                        payload = {
+                            number: number,
+                            mediatype: 'video',
+                            media: mediaUrl,
+                            caption: message
+                        };
+                    }
+
+                    console.log('Enviando para:', number);
+                    console.log('Payload:', payload);
+
+                    const response = await fetch(apiConfig.url + endpoint, {
+                        method: 'POST',
+                        headers: {
+                            'apikey': apiConfig.key,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        success++;
+                        addLog(`✅ Enviado para ${contact.name} (${contact.number})`, 'success', mode);
+                    } else {
+                        const errorData = await response.json();
+                        failed++;
+                        addLog(`❌ Erro ao enviar para ${contact.name}: ${errorData.message || 'Erro desconhecido'}`, 'error', mode);
+                    }
+
+                } catch (error) {
+                    failed++;
+                    addLog(`❌ Erro ao enviar para ${contact.name}: ${error.message}`, 'error', mode);
+                }
+
+                // Delay entre mensagens
+                if (i < contacts.length - 1) {
+                    await sleep(delay);
+                }
+            }
+
+            progressInfo.textContent = `✅ Concluído! ${success} enviadas, ${failed} falharam`;
+            addLog(`🎉 Envio concluído! ${success} sucesso, ${failed} falhas`, 'info', mode);
+        }
+
+        // Carregar planilha
+        function loadSpreadsheet() {
+            const fileInput = document.getElementById('spreadsheetFile');
+            const file = fileInput.files[0];
+            
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+                
+                allContacts = lines.map(num => ({
+                    number: num,
+                    name: num,
+                    type: 'contact',
+                    id: num
+                }));
+
+                document.getElementById('spreadsheetList').innerHTML = `
+                    <p style="text-align: center; color: #28a745; font-weight: 600;">
+                        ✅ ${allContacts.length} números carregados!
+                    </p>
+                    <div style="max-height: 200px; overflow-y: auto; margin-top: 15px;">
+                        ${allContacts.map(c => `<div style="padding: 8px; background: white; margin: 5px 0; border-radius: 4px;">${c.number}</div>`).join('')}
+                    </div>
+                `;
+            };
+            reader.readAsText(file);
+        }
+
+        // Converter arquivo para base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Sleep
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Adicionar log
+        function addLog(message, type = 'info', mode = 'api') {
+            const suffix = mode === 'api' ? '' : mode.charAt(0).toUpperCase() + mode.slice(1);
+            const container = document.getElementById(`logContainer${suffix}`);
+            
+            const time = new Date().toLocaleTimeString();
+            const logClass = type === 'success' ? 'log-success' : type === 'error' ? 'log-error' : 'log-info';
+            
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="log-time">[${time}]</span><span class="${logClass}">${message}</span>`;
+            
+            container.appendChild(entry);
+            container.scrollTop = container.scrollHeight;
+        }
     </script>
 </body>
 </html>
