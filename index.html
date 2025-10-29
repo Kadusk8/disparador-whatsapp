@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disparador WhatsApp - Evolution API</title>
+    <title>WhatsApp Sender - Evolution API</title>
     <style>
         * {
             margin: 0;
@@ -19,52 +19,29 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 25px;
+            padding: 30px;
             text-align: center;
         }
 
         .header h1 {
-            font-size: 2em;
-            margin-bottom: 5px;
+            font-size: 2.5em;
+            margin-bottom: 10px;
         }
 
-        .tabs {
-            display: flex;
-            background: #f5f5f5;
-            border-bottom: 2px solid #ddd;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            background: #f5f5f5;
-            border: none;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .tab.active {
-            background: white;
-            color: #25D366;
-            border-bottom: 3px solid #25D366;
-        }
-
-        .tab:hover {
-            background: #e8e8e8;
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
         }
 
         .content {
@@ -72,28 +49,30 @@
         }
 
         .section {
-            margin-bottom: 25px;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
         }
 
-        .section-title {
-            font-size: 1.2em;
-            color: #333;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #25D366;
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
-            color: #555;
+            margin-bottom: 8px;
+            color: #495057;
             font-weight: 600;
         }
 
@@ -103,135 +82,126 @@
         select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #ddd;
+            border: 2px solid #dee2e6;
             border-radius: 8px;
-            font-size: 14px;
-            transition: border 0.3s;
+            font-size: 1em;
+            transition: all 0.3s;
         }
 
-        input:focus,
+        input[type="text"]:focus,
+        input[type="number"]:focus,
         textarea:focus,
         select:focus {
             outline: none;
-            border-color: #25D366;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         textarea {
             resize: vertical;
             min-height: 100px;
-            font-family: inherit;
         }
 
         .btn {
-            padding: 12px 25px;
+            padding: 12px 30px;
             border: none;
             border-radius: 8px;
-            font-size: 15px;
+            font-size: 1em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            margin-right: 10px;
-            margin-bottom: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .btn-primary {
-            background: #25D366;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
 
         .btn-primary:hover {
-            background: #1ea952;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
         .btn-secondary {
-            background: #667eea;
+            background: #6c757d;
             color: white;
         }
 
         .btn-secondary:hover {
-            background: #5568d3;
+            background: #5a6268;
         }
 
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            margin-left: 10px;
-        }
-
-        .status-badge.connected {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .status-badge.disconnected {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .alert {
+        .status {
             padding: 15px;
             border-radius: 8px;
-            margin-bottom: 15px;
+            margin-top: 20px;
             display: none;
         }
 
-        .alert.success {
+        .status.success {
             background: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
 
-        .alert.error {
+        .status.error {
             background: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
 
-        .alert.info {
+        .status.info {
             background: #d1ecf1;
             color: #0c5460;
             border: 1px solid #bee5eb;
         }
 
         .contacts-list {
-            max-height: 300px;
+            max-height: 400px;
             overflow-y: auto;
-            border: 2px solid #ddd;
+            border: 2px solid #dee2e6;
             border-radius: 8px;
             padding: 15px;
-            background: #f9f9f9;
+            background: white;
         }
 
         .contact-item {
-            padding: 10px;
-            background: white;
-            margin-bottom: 8px;
-            border-radius: 5px;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            border-left: 3px solid #25D366;
+            gap: 10px;
+            transition: all 0.3s;
         }
 
-        .progress-container {
-            display: none;
-            margin-top: 20px;
+        .contact-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .contact-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .contact-number {
+            font-size: 0.9em;
+            color: #6c757d;
         }
 
         .progress-bar {
@@ -240,284 +210,314 @@
             background: #e9ecef;
             border-radius: 15px;
             overflow: hidden;
-            margin-bottom: 15px;
+            margin-top: 20px;
+            display: none;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #25D366 0%, #128C7E 100%);
-            width: 0%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
             transition: width 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 600;
-            font-size: 14px;
         }
 
-        .log-container {
-            max-height: 400px;
-            overflow-y: auto;
-            background: #f8f9fa;
-            border: 1px solid #ddd;
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 12px;
+            background: white;
+            border: 2px dashed #dee2e6;
             border-radius: 8px;
-            padding: 15px;
-        }
-
-        .log-item {
-            padding: 8px 12px;
-            margin-bottom: 5px;
-            border-radius: 5px;
-            font-size: 13px;
-            font-family: 'Courier New', monospace;
-        }
-
-        .log-item.success {
-            background: #d4edda;
-            color: #155724;
-        }
-
-        .log-item.error {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
-        .log-item.info {
-            background: #d1ecf1;
-            color: #0c5460;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .file-upload {
-            border: 2px dashed #25D366;
-            border-radius: 8px;
-            padding: 30px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
         }
 
-        .file-upload:hover {
-            background: #f0f9f4;
-            border-color: #128C7E;
+        .file-input-label:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
         }
 
-        .file-upload input {
+        .selected-file {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e7f3ff;
+            border-radius: 8px;
+            color: #004085;
             display: none;
         }
 
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
         }
 
-        @media (max-width: 768px) {
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .log-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            display: none;
+        }
+
+        .log-entry {
+            padding: 5px;
+            margin-bottom: 5px;
+            border-left: 3px solid #667eea;
+            padding-left: 10px;
+        }
+
+        .log-entry.error {
+            border-left-color: #dc3545;
+            color: #721c24;
+        }
+
+        .log-entry.success {
+            border-left-color: #28a745;
+            color: #155724;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📱 WhatsApp Business - Disparador em Massa</h1>
-            <p>Powered by Evolution API</p>
-        </div>
-
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('config')">🔧 Configuração</button>
-            <button class="tab" onclick="showTab('contacts')">👥 Contatos</button>
-            <button class="tab" onclick="showTab('message')">💬 Mensagem</button>
-            <button class="tab" onclick="showTab('send')">🚀 Enviar</button>
+            <h1>📱 WhatsApp Sender</h1>
+            <p>Envio em massa via Evolution API</p>
         </div>
 
         <div class="content">
-            <!-- ABA 1: CONFIGURAÇÃO -->
-            <div id="tab-config" class="tab-content">
-                <div class="section">
-                    <div class="section-title">
-                        🔌 Conexão com Evolution API
-                        <span id="connectionBadge" class="status-badge disconnected">Desconectado</span>
-                    </div>
-                    
-                    <div id="configAlert" class="alert"></div>
-
-                    <div class="form-group">
-                        <label>URL da API:</label>
-                        <input type="text" id="apiUrl" value="https://evoapi.automacaocomia.pro" placeholder="https://sua-api.com">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Nome da Instância:</label>
-                        <input type="text" id="instanceName" value="atendimento" placeholder="nome-da-instancia">
-                    </div>
-
-                    <div class="form-group">
-                        <label>API Key:</label>
-                        <input type="text" id="apiKey" value="708B54318A4B-4E36-8D07-D8E68FB84AA8" placeholder="sua-chave-api">
-                    </div>
-
-                    <button class="btn btn-primary" onclick="testConnection()">🔌 Testar Conexão</button>
+            <!-- Configuração da API -->
+            <div class="section">
+                <h2>🔧 Configuração da API</h2>
+                <div class="form-group">
+                    <label>URL da API Evolution:</label>
+                    <input type="text" id="apiUrl" placeholder="https://sua-api.com" value="https://evo.kdsolucoes.com.br">
                 </div>
+                <div class="form-group">
+                    <label>API Key:</label>
+                    <input type="text" id="apiKey" placeholder="Sua API Key">
+                </div>
+                <div class="form-group">
+                    <label>Nome da Instância:</label>
+                    <input type="text" id="instanceName" placeholder="nome-da-instancia">
+                </div>
+                <button class="btn btn-primary" onclick="testConnection()">
+                    <span>🔌 Testar Conexão</span>
+                </button>
+                <button class="btn btn-secondary" onclick="fetchContacts()">
+                    <span>📋 Buscar Contatos</span>
+                </button>
+                <div id="connectionStatus" class="status"></div>
             </div>
 
-            <!-- ABA 2: CONTATOS -->
-            <div id="tab-contacts" class="tab-content hidden">
-                <div class="section">
-                    <div class="section-title">📋 Origem dos Contatos</div>
-                    
-                    <div id="contactsAlert" class="alert"></div>
-
-                    <div class="form-group">
-                        <label>Escolha a origem:</label>
-                        <select id="contactSource" onchange="changeContactSource()">
-                            <option value="api-contacts">📱 Apenas Contatos</option>
-                            <option value="api-chats">💬 Apenas Conversas</option>
-                            <option value="api-both">🔄 Contatos + Conversas</option>
-                            <option value="spreadsheet">📊 Upload de Planilha</option>
-                            <option value="manual">✍️ Inserir Manualmente</option>
-                        </select>
+            <!-- Lista de Contatos -->
+            <div class="section">
+                <h2>👥 Contatos e Conversas</h2>
+                <div class="form-group">
+                    <label>Filtrar por:</label>
+                    <select id="filterType">
+                        <option value="all">Todos (Contatos + Conversas)</option>
+                        <option value="contacts">Apenas Contatos</option>
+                        <option value="chats">Apenas Conversas</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="searchContact" placeholder="🔍 Buscar contato..." onkeyup="filterContacts()">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                        Selecionar Todos
+                    </label>
+                </div>
+                <div id="contactsList" class="contacts-list">
+                    <p style="text-align: center; color: #6c757d;">Clique em "Buscar Contatos" para carregar</p>
+                </div>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalContacts">0</div>
+                        <div class="stat-label">Total</div>
                     </div>
-
-                    <!-- Modo API -->
-                    <div id="apiContactsMode">
-                        <button class="btn btn-primary" onclick="fetchContacts()">📥 Buscar Contatos</button>
-                        <button class="btn btn-secondary" onclick="selectAllContacts()">✅ Selecionar Todos</button>
-                        <button class="btn btn-danger" onclick="clearSelection()">🗑️ Limpar Seleção</button>
-                        
-                        <div style="margin-top: 15px;">
-                            <input type="text" id="searchContact" placeholder="🔍 Buscar contato..." onkeyup="filterContacts()" style="margin-bottom: 10px;">
-                        </div>
-
-                        <div id="contactsList" class="contacts-list" style="margin-top: 15px;">
-                            <p style="text-align: center; color: #999;">Clique em "Buscar Contatos" para carregar</p>
-                        </div>
-                    </div>
-
-                    <!-- Modo Planilha -->
-                    <div id="spreadsheetMode" class="hidden">
-                        <div class="file-upload" onclick="document.getElementById('fileInput').click()">
-                            <input type="file" id="fileInput" accept=".csv" onchange="handleFileUpload(event)">
-                            <p style="font-size: 48px; margin-bottom: 10px;">📄</p>
-                            <p style="font-weight: 600; margin-bottom: 5px;">Clique para selecionar arquivo CSV</p>
-                            <p style="font-size: 13px; color: #666;">Formato: numero,nome (um por linha)</p>
-                        </div>
-                        <div id="fileInfo" style="margin-top: 15px; font-weight: 600; color: #25D366;"></div>
-                    </div>
-
-                    <!-- Modo Manual -->
-                    <div id="manualMode" class="hidden">
-                        <div class="form-group">
-                            <label>Números (um por linha, com DDI):</label>
-                            <textarea id="manualNumbers" placeholder="5511999999999
-5511888888888
-5511777777777" rows="10"></textarea>
-                        </div>
-                        <button class="btn btn-primary" onclick="loadManualNumbers()">✅ Carregar Números</button>
+                    <div class="stat-card">
+                        <div class="stat-number" id="selectedContacts">0</div>
+                        <div class="stat-label">Selecionados</div>
                     </div>
                 </div>
             </div>
 
-            <!-- ABA 3: MENSAGEM -->
-            <div id="tab-message" class="tab-content hidden">
-                <div class="section">
-                    <div class="section-title">💬 Configurar Mensagem</div>
+            <!-- Upload de Planilha -->
+            <div class="section">
+                <h2>📊 Upload de Planilha</h2>
+                <div class="file-input-wrapper">
+                    <input type="file" id="spreadsheetFile" accept=".csv,.xlsx,.xls" onchange="handleSpreadsheet()">
+                    <label class="file-input-label">
+                        📁 Clique para selecionar arquivo CSV ou Excel
+                    </label>
+                </div>
+                <div id="spreadsheetInfo" class="selected-file"></div>
+            </div>
 
-                    <div class="form-group">
-                        <label>Texto da Mensagem:</label>
-                        <textarea id="messageText" placeholder="Digite sua mensagem aqui..." rows="6"></textarea>
+            <!-- Mensagem -->
+            <div class="section">
+                <h2>💬 Mensagem</h2>
+                <div class="form-group">
+                    <label>Texto da Mensagem:</label>
+                    <textarea id="messageText" placeholder="Digite sua mensagem aqui..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Imagem:</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="mediaFile" accept="image/*" onchange="handleMedia()">
+                        <label class="file-input-label">
+                            🖼️ Clique para selecionar imagem (opcional)
+                        </label>
                     </div>
-
-                    <div class="form-group">
-                        <label>URL da Mídia (opcional):</label>
-                        <input type="text" id="mediaUrl" placeholder="https://exemplo.com/imagem.jpg">
-                        <small style="color: #666; display: block; margin-top: 5px;">
-                            ℹ️ Suporta imagens, vídeos e documentos
-                        </small>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Delay entre mensagens (segundos):</label>
-                        <input type="number" id="delaySeconds" value="3" min="1" max="60">
-                    </div>
+                    <div id="mediaInfo" class="selected-file"></div>
+                </div>
+                <div class="form-group">
+                    <label>Vídeo (URL):</label>
+                    <input type="text" id="videoUrl" placeholder="https://exemplo.com/video.mp4 (opcional)">
+                    <small style="color: #6c757d; display: block; margin-top: 5px;">💡 Cole o link direto do vídeo hospedado online</small>
+                </div>
+                <div class="form-group">
+                    <label>Áudio (URL):</label>
+                    <input type="text" id="audioUrl" placeholder="https://exemplo.com/audio.mp3 (opcional)">
+                    <small style="color: #6c757d; display: block; margin-top: 5px;">🎤 Será enviado como áudio de voz (gravado)</small>
+                </div>
+                <div class="form-group">
+                    <label>Delay entre mensagens (segundos):</label>
+                    <input type="number" id="delay" value="3" min="1" max="60">
                 </div>
             </div>
 
-            <!-- ABA 4: ENVIAR -->
-            <div id="tab-send" class="tab-content hidden">
-                <div class="section">
-                    <div class="section-title">🚀 Iniciar Envio</div>
+            <!-- Envio -->
+            <div class="section">
+                <h2>🚀 Enviar Mensagens</h2>
+                <button class="btn btn-primary" onclick="sendMessages()" style="width: 100%; font-size: 1.2em; padding: 15px;">
+                    <span>📤 Enviar para Selecionados</span>
+                </button>
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-fill" id="progressFill">0%</div>
+                </div>
+                <div id="sendStatus" class="status"></div>
+                <div id="logContainer" class="log-container"></div>
+            </div>
 
-                    <div id="sendAlert" class="alert"></div>
-
-                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-                        <h3 style="margin-bottom: 15px;">📊 Resumo do Envio:</h3>
-                        <p><strong>Contatos selecionados:</strong> <span id="summaryContacts">0</span></p>
-                        <p><strong>Mensagem:</strong> <span id="summaryMessage">Não configurada</span></p>
-                        <p><strong>Mídia:</strong> <span id="summaryMedia">Nenhuma</span></p>
-                        <p><strong>Delay:</strong> <span id="summaryDelay">3s</span></p>
+            <!-- Relatórios e Histórico -->
+            <div class="section">
+                <h2>📊 Relatórios e Histórico</h2>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalSent">0</div>
+                        <div class="stat-label">Total Enviados</div>
                     </div>
-
-                    <button class="btn btn-primary" onclick="startSending()" id="sendBtn" style="font-size: 18px; padding: 15px 40px;">
-                        🚀 INICIAR ENVIO EM MASSA
+                    <div class="stat-card">
+                        <div class="stat-number" id="successRate">0%</div>
+                        <div class="stat-label">Taxa de Sucesso</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalFailed">0</div>
+                        <div class="stat-label">Falhas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="lastSendTime">-</div>
+                        <div class="stat-label">Último Envio</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px; display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="loadHistory()">
+                        <span>🔄 Atualizar Estatísticas</span>
                     </button>
-
-                    <div class="progress-container" id="progressContainer">
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progressFill">0%</div>
-                        </div>
-                        <div class="log-container" id="logContainer"></div>
-                    </div>
+                    <button class="btn btn-secondary" onclick="exportToExcel()">
+                        <span>📥 Exportar Excel</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearHistory()">
+                        <span>🗑️ Limpar Histórico</span>
+                    </button>
                 </div>
+                <div id="historyTable" style="margin-top: 20px; overflow-x: auto;"></div>
             </div>
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script>
-        // ========== VARIÁVEIS GLOBAIS ==========
         let allContacts = [];
-        let selectedContacts = [];
-        let isConnected = false;
+        let selectedMedia = null;
+        let sendHistory = JSON.parse(localStorage.getItem('whatsappSendHistory')) || [];
 
-        // ========== FUNÇÕES DE NAVEGAÇÃO ==========
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.add('hidden');
-            });
-            
-            document.querySelectorAll('.tab').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            document.getElementById('tab-' + tabName).classList.remove('hidden');
-            event.target.classList.add('active');
-
-            if (tabName === 'send') {
-                updateSummary();
-            }
-        }
-
-        // ========== FUNÇÕES DE CONEXÃO ==========
+        // Testar conexão com a API
         async function testConnection() {
-            const apiUrl = document.getElementById('apiUrl').value.trim();
-            const instanceName = document.getElementById('instanceName').value.trim();
-            const apiKey = document.getElementById('apiKey').value.trim();
+            const apiUrl = document.getElementById('apiUrl').value;
+            const apiKey = document.getElementById('apiKey').value;
+            const instanceName = document.getElementById('instanceName').value;
+            const status = document.getElementById('connectionStatus');
 
-            if (!apiUrl || !instanceName || !apiKey) {
-                showAlert('configAlert', '⚠️ Preencha todos os campos!', 'error');
+            if (!apiUrl || !apiKey || !instanceName) {
+                showStatus(status, 'error', '❌ Preencha todos os campos de configuração');
                 return;
             }
 
-            showAlert('configAlert', '🔄 Testando conexão...', 'info');
+            showStatus(status, 'info', '🔄 Testando conexão...');
 
             try {
-                const response = await fetch(`${apiUrl}/instance/connectionState/${instanceName}`, {
+                const response = await fetch(`${apiUrl}/instance/connectionState/${encodeURIComponent(instanceName)}`, {
                     method: 'GET',
                     headers: {
                         'apikey': apiKey
@@ -525,189 +525,138 @@
                 });
 
                 const data = await response.json();
-                console.log('Resposta da conexão:', data);
-
+                
                 if (response.ok) {
-                    isConnected = true;
-                    document.getElementById('connectionBadge').className = 'status-badge connected';
-                    document.getElementById('connectionBadge').textContent = 'Conectado ✓';
-                    showAlert('configAlert', `✅ Conectado com sucesso! Status: ${data.state || 'OK'}`, 'success');
+                    showStatus(status, 'success', `✅ Conectado! Status: ${data.state || 'Conectado'}`);
                 } else {
-                    throw new Error(data.message || 'Erro na conexão');
+                    showStatus(status, 'error', `❌ Erro: ${data.message || 'Falha na conexão'}`);
                 }
             } catch (error) {
-                isConnected = false;
-                document.getElementById('connectionBadge').className = 'status-badge disconnected';
-                document.getElementById('connectionBadge').textContent = 'Desconectado ✗';
-                showAlert('configAlert', `❌ Erro: ${error.message}`, 'error');
+                showStatus(status, 'error', `❌ Erro de conexão: ${error.message}`);
             }
         }
 
-        // ========== FUNÇÕES DE CONTATOS ==========
-        function changeContactSource() {
-            const source = document.getElementById('contactSource').value;
-            
-            document.getElementById('apiContactsMode').classList.add('hidden');
-            document.getElementById('spreadsheetMode').classList.add('hidden');
-            document.getElementById('manualMode').classList.add('hidden');
-
-            if (source.startsWith('api-')) {
-                document.getElementById('apiContactsMode').classList.remove('hidden');
-            } else if (source === 'spreadsheet') {
-                document.getElementById('spreadsheetMode').classList.remove('hidden');
-            } else if (source === 'manual') {
-                document.getElementById('manualMode').classList.remove('hidden');
-            }
-        }
-
+        // Buscar contatos e conversas
         async function fetchContacts() {
-            if (!isConnected) {
-                showAlert('contactsAlert', '⚠️ Teste a conexão primeiro!', 'error');
+            const apiUrl = document.getElementById('apiUrl').value;
+            const apiKey = document.getElementById('apiKey').value;
+            const instanceName = document.getElementById('instanceName').value;
+            const filterType = document.getElementById('filterType').value;
+            const status = document.getElementById('connectionStatus');
+
+            if (!apiUrl || !apiKey || !instanceName) {
+                showStatus(status, 'error', '❌ Configure a API primeiro');
                 return;
             }
 
-            const apiUrl = document.getElementById('apiUrl').value.trim();
-            const instanceName = document.getElementById('instanceName').value.trim();
-            const apiKey = document.getElementById('apiKey').value.trim();
-            const source = document.getElementById('contactSource').value;
-
-            showAlert('contactsAlert', '🔄 Buscando contatos...', 'info');
+            showStatus(status, 'info', '🔄 Buscando contatos...');
             allContacts = [];
 
             try {
-                // Buscar contatos
-                if (source === 'api-contacts' || source === 'api-both') {
-                    try {
-                        const contactsResponse = await fetch(`${apiUrl}/chat/findContacts/${instanceName}`, {
-                            method: 'POST',
-                            headers: {
-                                'apikey': apiKey
-                            }
-                        });
+                // Buscar conversas
+                if (filterType === 'all' || filterType === 'chats') {
+                    const chatsResponse = await fetch(`${apiUrl}/chat/findChats/${encodeURIComponent(instanceName)}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': apiKey
+                        },
+                        body: JSON.stringify({})
+                    });
 
-                        if (contactsResponse.ok) {
-                            const contactsData = await contactsResponse.json();
-                            console.log('Contatos recebidos:', contactsData);
-                            
-                            if (Array.isArray(contactsData) && contactsData.length > 0) {
-                                contactsData.forEach(contact => {
-                                    const number = contact.id.split('@')[0];
+                    if (chatsResponse.ok) {
+                        const chatsData = await chatsResponse.json();
+                        console.log('Conversas recebidas:', chatsData);
+                        
+                        if (Array.isArray(chatsData)) {
+                            chatsData.forEach(chat => {
+                                // Verificar se é grupo
+                                if (chat.id && !chat.id.includes('@g.us')) {
+                                    // Pegar o número real do remoteJid ou id
+                                    const phoneNumber = chat.remoteJid || chat.id;
+                                    const displayName = chat.pushName || chat.name || phoneNumber.split('@')[0];
+                                    
                                     allContacts.push({
-                                        number: number,
-                                        name: contact.pushName || contact.name || number,
-                                        type: 'contact'
+                                        name: displayName,
+                                        number: phoneNumber,
+                                        type: 'chat'
                                     });
-                                });
-                            }
+                                }
+                            });
                         }
-                    } catch (error) {
-                        console.log('Erro ao buscar contatos:', error);
                     }
                 }
 
-                // Buscar conversas (chats)
-                if (source === 'api-chats' || source === 'api-both') {
-                    try {
-                        const chatsResponse = await fetch(`${apiUrl}/chat/findChats/${instanceName}`, {
-                            method: 'POST',
-                            headers: {
-                                'apikey': apiKey
-                            }
-                        });
+                // Buscar contatos
+                if (filterType === 'all' || filterType === 'contacts') {
+                    const contactsResponse = await fetch(`${apiUrl}/chat/findContacts/${encodeURIComponent(instanceName)}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': apiKey
+                        },
+                        body: JSON.stringify({})
+                    });
 
-                        if (chatsResponse.ok) {
-                            const chatsData = await chatsResponse.json();
-                            console.log('Conversas recebidas:', chatsData);
-                            
-                            if (Array.isArray(chatsData) && chatsData.length > 0) {
-                                chatsData.forEach(chat => {
-                                    const number = chat.id.split('@')[0];
-                                    // Não adicionar grupos
-                                    if (!chat.id.includes('@g.us')) {
+                    if (contactsResponse.ok) {
+                        const contactsData = await contactsResponse.json();
+                        console.log('Contatos recebidos:', contactsData);
+                        
+                        if (Array.isArray(contactsData)) {
+                            contactsData.forEach(contact => {
+                                if (contact.id && !contact.id.includes('@g.us')) {
+                                    // Pegar o número real do remoteJid ou id
+                                    const phoneNumber = contact.remoteJid || contact.id;
+                                    const displayName = contact.pushName || contact.name || phoneNumber.split('@')[0];
+                                    
+                                    // Evitar duplicatas
+                                    if (!allContacts.find(c => c.number === phoneNumber)) {
                                         allContacts.push({
-                                            number: number,
-                                            name: chat.name || number,
-                                            type: 'chat'
+                                            name: displayName,
+                                            number: phoneNumber,
+                                            type: 'contact'
                                         });
                                     }
-                                });
-                            }
+                                }
+                            });
                         }
-                    } catch (error) {
-                        console.log('Erro ao buscar chats:', error);
                     }
                 }
 
-                // Remover duplicatas
-                allContacts = allContacts.filter((contact, index, self) =>
-                    index === self.findIndex(c => c.number === contact.number)
-                );
-
                 if (allContacts.length > 0) {
-                    showAlert('contactsAlert', `✅ ${allContacts.length} contatos encontrados!`, 'success');
-                    renderContacts();
+                    displayContacts();
+                    showStatus(status, 'success', `✅ ${allContacts.length} contatos carregados`);
                 } else {
-                    showAlert('contactsAlert', '⚠️ Nenhum contato encontrado. Verifique se há conversas no WhatsApp.', 'error');
-                    document.getElementById('contactsList').innerHTML = '<p style="text-align: center; color: #999;">Nenhum contato encontrado</p>';
+                    showStatus(status, 'error', '❌ Nenhum contato encontrado');
                 }
             } catch (error) {
-                showAlert('contactsAlert', `❌ Erro: ${error.message}`, 'error');
+                showStatus(status, 'error', `❌ Erro: ${error.message}`);
                 console.error('Erro completo:', error);
             }
         }
 
-        function renderContacts() {
-            const container = document.getElementById('contactsList');
-            container.innerHTML = '';
+        // Exibir contatos na lista
+        function displayContacts() {
+            const contactsList = document.getElementById('contactsList');
+            contactsList.innerHTML = '';
 
             allContacts.forEach((contact, index) => {
                 const div = document.createElement('div');
                 div.className = 'contact-item';
                 div.innerHTML = `
-                    <div>
-                        <strong>${contact.name}</strong>
-                        <br>
-                        <small style="color: #666;">${contact.number} ${contact.type === 'chat' ? '💬' : '📱'}</small>
+                    <input type="checkbox" id="contact_${index}" value="${contact.number}">
+                    <div class="contact-info">
+                        <div class="contact-name">${contact.name}</div>
+                        <div class="contact-number">${contact.number}</div>
                     </div>
-                    <input type="checkbox" onchange="toggleContact(${index})" id="contact-${index}">
                 `;
-                container.appendChild(div);
+                contactsList.appendChild(div);
             });
+
+            updateStats();
         }
 
-        function toggleContact(index) {
-            const contact = allContacts[index];
-            const checkbox = document.getElementById(`contact-${index}`);
-
-            if (checkbox.checked) {
-                if (!selectedContacts.find(c => c.number === contact.number)) {
-                    selectedContacts.push(contact);
-                }
-            } else {
-                selectedContacts = selectedContacts.filter(c => c.number !== contact.number);
-            }
-
-            console.log('Selecionados:', selectedContacts.length);
-        }
-
-        function selectAllContacts() {
-            selectedContacts = [...allContacts];
-            allContacts.forEach((_, index) => {
-                const checkbox = document.getElementById(`contact-${index}`);
-                if (checkbox) checkbox.checked = true;
-            });
-            showAlert('contactsAlert', `✅ ${selectedContacts.length} contatos selecionados!`, 'success');
-        }
-
-        function clearSelection() {
-            selectedContacts = [];
-            allContacts.forEach((_, index) => {
-                const checkbox = document.getElementById(`contact-${index}`);
-                if (checkbox) checkbox.checked = false;
-            });
-            showAlert('contactsAlert', '🗑️ Seleção limpa', 'info');
-        }
-
+        // Filtrar contatos
         function filterContacts() {
             const search = document.getElementById('searchContact').value.toLowerCase();
             const items = document.querySelectorAll('.contact-item');
@@ -718,179 +667,418 @@
             });
         }
 
-        // ========== FUNÇÕES DE PLANILHA ==========
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
+        // Selecionar todos
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('selectAll').checked;
+            const checkboxes = document.querySelectorAll('.contact-item input[type="checkbox"]');
+            
+            checkboxes.forEach(cb => {
+                if (cb.closest('.contact-item').style.display !== 'none') {
+                    cb.checked = selectAll;
+                }
+            });
+
+            updateStats();
+        }
+
+        // Atualizar estatísticas
+        function updateStats() {
+            document.getElementById('totalContacts').textContent = allContacts.length;
+            
+            const selected = document.querySelectorAll('.contact-item input[type="checkbox"]:checked').length;
+            document.getElementById('selectedContacts').textContent = selected;
+        }
+
+        // Adicionar listener para atualizar stats quando checkbox mudar
+        document.addEventListener('change', (e) => {
+            if (e.target.type === 'checkbox' && e.target.id.startsWith('contact_')) {
+                updateStats();
+            }
+        });
+
+        // Processar planilha
+        function handleSpreadsheet() {
+            const file = document.getElementById('spreadsheetFile').files[0];
+            const info = document.getElementById('spreadsheetInfo');
+
             if (!file) return;
 
             const reader = new FileReader();
             reader.onload = function(e) {
-                const content = e.target.result;
-                parseCSV(content);
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+
+                    let count = 0;
+                    jsonData.forEach((row, index) => {
+                        if (index === 0) return; // Pular cabeçalho
+                        
+                        const name = row[0] || `Contato ${index}`;
+                        let number = String(row[1] || '').replace(/\D/g, '');
+                        
+                        if (number && number.length >= 10) {
+                            if (!number.includes('@')) {
+                                number = number + '@s.whatsapp.net';
+                            }
+                            
+                            if (!allContacts.find(c => c.number === number)) {
+                                allContacts.push({ name, number, type: 'spreadsheet' });
+                                count++;
+                            }
+                        }
+                    });
+
+                    displayContacts();
+                    info.style.display = 'block';
+                    info.textContent = `✅ ${count} contatos importados da planilha`;
+                } catch (error) {
+                    info.style.display = 'block';
+                    info.style.background = '#f8d7da';
+                    info.style.color = '#721c24';
+                    info.textContent = `❌ Erro ao processar planilha: ${error.message}`;
+                }
             };
-            reader.readAsText(file);
+            reader.readAsArrayBuffer(file);
         }
 
-        function parseCSV(content) {
-            const lines = content.split('\n');
-            allContacts = [];
-            selectedContacts = [];
+        // Processar mídia (apenas imagens)
+        function handleMedia() {
+            const file = document.getElementById('mediaFile').files[0];
+            const info = document.getElementById('mediaInfo');
 
-            for (let i = 1; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (line) {
-                    const parts = line.split(',');
-                    const number = parts[0].replace(/\D/g, '');
-                    if (number) {
-                        const contact = {
-                            number: number,
-                            name: parts[1] || number,
-                            type: 'csv'
-                        };
-                        allContacts.push(contact);
-                        selectedContacts.push(contact);
-                    }
-                }
+            if (!file) {
+                selectedMedia = null;
+                info.style.display = 'none';
+                return;
             }
 
-            document.getElementById('fileInfo').textContent = `✅ ${selectedContacts.length} números carregados`;
-            showAlert('contactsAlert', `✅ ${selectedContacts.length} números carregados da planilha!`, 'success');
+            // Limitar tamanho: 5MB para imagens
+            const maxSize = 5 * 1024 * 1024;
+            
+            if (file.size > maxSize) {
+                info.style.display = 'block';
+                info.style.background = '#f8d7da';
+                info.style.color = '#721c24';
+                info.textContent = `❌ Imagem muito grande! Máximo: 5MB. Tamanho atual: ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+                selectedMedia = null;
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedMedia = {
+                    base64: e.target.result,
+                    filename: file.name,
+                    mimetype: file.type
+                };
+
+                info.style.display = 'block';
+                info.style.background = '#e7f3ff';
+                info.style.color = '#004085';
+                info.textContent = `✅ Imagem selecionada: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+            };
+            reader.readAsDataURL(file);
         }
 
-        // ========== FUNÇÕES DE MANUAL ==========
-        function loadManualNumbers() {
-            const text = document.getElementById('manualNumbers').value.trim();
-            const lines = text.split('\n');
-            
-            allContacts = [];
-            selectedContacts = [];
+        // Enviar mensagens
+        async function sendMessages() {
+            const apiUrl = document.getElementById('apiUrl').value;
+            const apiKey = document.getElementById('apiKey').value;
+            const instanceName = document.getElementById('instanceName').value;
+            const messageText = document.getElementById('messageText').value;
+            const delay = parseInt(document.getElementById('delay').value) * 1000;
+            const status = document.getElementById('sendStatus');
+            const logContainer = document.getElementById('logContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
 
-            lines.forEach(line => {
-                const number = line.trim().replace(/\D/g, '');
-                if (number) {
-                    const contact = {
-                        number: number,
-                        name: number,
-                        type: 'manual'
-                    };
-                    allContacts.push(contact);
-                    selectedContacts.push(contact);
-                }
+            // Validações
+            if (!apiUrl || !apiKey || !instanceName) {
+                showStatus(status, 'error', '❌ Configure a API primeiro');
+                return;
+            }
+
+            const videoUrl = document.getElementById('videoUrl').value.trim();
+            const audioUrl = document.getElementById('audioUrl').value.trim();
+
+            if (!messageText && !selectedMedia && !videoUrl && !audioUrl) {
+                showStatus(status, 'error', '❌ Digite uma mensagem ou selecione uma mídia');
+                return;
+            }
+
+            // Obter contatos selecionados
+            const selectedCheckboxes = document.querySelectorAll('.contact-item input[type="checkbox"]:checked');
+            if (selectedCheckboxes.length === 0) {
+                showStatus(status, 'error', '❌ Selecione pelo menos um contato');
+                return;
+            }
+
+            const recipients = Array.from(selectedCheckboxes).map(cb => {
+                const contactItem = cb.closest('.contact-item');
+                return {
+                    number: cb.value,
+                    name: contactItem.querySelector('.contact-name').textContent
+                };
             });
 
-            showAlert('contactsAlert', `✅ ${selectedContacts.length} números carregados!`, 'success');
-        }
+            // Preparar interface
+            logContainer.innerHTML = '';
+            logContainer.style.display = 'block';
+            progressBar.style.display = 'block';
+            showStatus(status, 'info', `🔄 Enviando para ${recipients.length} contatos...`);
 
-        // ========== FUNÇÕES DE ENVIO ==========
-        function updateSummary() {
-            document.getElementById('summaryContacts').textContent = selectedContacts.length;
-            
-            const message = document.getElementById('messageText').value.trim();
-            document.getElementById('summaryMessage').textContent = message ? message.substring(0, 50) + '...' : 'Não configurada';
-            
-            const media = document.getElementById('mediaUrl').value.trim();
-            document.getElementById('summaryMedia').textContent = media ? 'Sim' : 'Nenhuma';
-            
-            const delay = document.getElementById('delaySeconds').value;
-            document.getElementById('summaryDelay').textContent = delay + 's';
-        }
+            let success = 0;
+            let failed = 0;
 
-        async function startSending() {
-            if (selectedContacts.length === 0) {
-                showAlert('sendAlert', '⚠️ Selecione pelo menos um contato!', 'error');
-                return;
-            }
-
-            const message = document.getElementById('messageText').value.trim();
-            const mediaUrl = document.getElementById('mediaUrl').value.trim();
-
-            if (!message && !mediaUrl) {
-                showAlert('sendAlert', '⚠️ Digite uma mensagem ou adicione uma mídia!', 'error');
-                return;
-            }
-
-            const apiUrl = document.getElementById('apiUrl').value.trim();
-            const instanceName = document.getElementById('instanceName').value.trim();
-            const apiKey = document.getElementById('apiKey').value.trim();
-            const delay = parseInt(document.getElementById('delaySeconds').value) * 1000;
-
-            document.getElementById('sendBtn').disabled = true;
-            document.getElementById('progressContainer').style.display = 'block';
-            document.getElementById('logContainer').innerHTML = '';
-
-            let successCount = 0;
-            let errorCount = 0;
-
-            for (let i = 0; i < selectedContacts.length; i++) {
-                const contact = selectedContacts[i];
-                const progress = ((i + 1) / selectedContacts.length * 100).toFixed(0);
-
-                document.getElementById('progressFill').style.width = progress + '%';
-                document.getElementById('progressFill').textContent = progress + '%';
+            // Enviar para cada contato
+            for (let i = 0; i < recipients.length; i++) {
+                const recipient = recipients[i];
+                const progress = Math.round(((i + 1) / recipients.length) * 100);
+                progressFill.style.width = progress + '%';
+                progressFill.textContent = progress + '%';
 
                 try {
-                    const payload = {
-                        number: contact.number
-                    };
+                    let endpoint, payload;
 
-                    if (message) {
-                        payload.text = message;
+                    if (videoUrl) {
+                        // Enviar vídeo por URL
+                        endpoint = `${apiUrl}/message/sendMedia/${encodeURIComponent(instanceName)}`;
+                        payload = {
+                            number: recipient.number.replace('@s.whatsapp.net', ''),
+                            mediatype: 'video',
+                            media: videoUrl,
+                            caption: messageText || ''
+                        };
+                    } else if (selectedMedia) {
+                        // Enviar imagem em base64 - remover o prefixo data:image/...;base64,
+                        const base64Data = selectedMedia.base64.split(',')[1] || selectedMedia.base64;
+                        
+                        endpoint = `${apiUrl}/message/sendMedia/${encodeURIComponent(instanceName)}`;
+                        payload = {
+                            number: recipient.number.replace('@s.whatsapp.net', ''),
+                            mediatype: selectedMedia.mimetype.split('/')[0],
+                            mimetype: selectedMedia.mimetype,
+                            caption: messageText || '',
+                            media: base64Data
+                        };
+                    } else {
+                        // Enviar apenas texto
+                        endpoint = `${apiUrl}/message/sendText/${encodeURIComponent(instanceName)}`;
+                        payload = {
+                            number: recipient.number.replace('@s.whatsapp.net', ''),
+                            text: messageText
+                        };
                     }
 
-                    if (mediaUrl) {
-                        payload.mediaUrl = mediaUrl;
-                    }
+                    console.log('📤 Enviando:', { endpoint, payload });
 
-                    const response = await fetch(`${apiUrl}/message/sendText/${instanceName}`, {
+                    const response = await fetch(endpoint, {
                         method: 'POST',
                         headers: {
-                            'apikey': apiKey,
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'apikey': apiKey
                         },
                         body: JSON.stringify(payload)
                     });
 
+                    const responseData = await response.json();
+                    console.log('📥 Resposta:', responseData);
+
                     if (response.ok) {
-                        successCount++;
-                        addLog(`✅ Enviado para ${contact.name} (${contact.number})`, 'success');
+                        success++;
+                        addLog(`✅ Enviado para ${recipient.name}`, 'success');
+                        saveToHistory(recipient, 'success', messageText);
                     } else {
-                        throw new Error('Falha no envio');
+                        failed++;
+                        const errorMsg = responseData.message || JSON.stringify(responseData);
+                        addLog(`❌ Erro ao enviar para ${recipient.name}: ${errorMsg}`, 'error');
+                        saveToHistory(recipient, 'failed', messageText, errorMsg);
                     }
                 } catch (error) {
-                    errorCount++;
-                    addLog(`❌ Erro ao enviar para ${contact.name}: ${error.message}`, 'error');
+                    failed++;
+                    addLog(`❌ Erro ao enviar para ${recipient.name}: ${error.message}`, 'error');
+                    saveToHistory(recipient, 'failed', messageText, error.message);
+                    console.error('Erro completo:', error);
                 }
 
-                if (i < selectedContacts.length - 1) {
-                    await sleep(delay);
+                // Delay entre mensagens (exceto na última)
+                if (i < recipients.length - 1) {
+                    await new Promise(resolve => setTimeout(resolve, delay));
                 }
             }
 
-            addLog(`\n📊 RESUMO FINAL: ${successCount} enviados com sucesso, ${errorCount} erros`, 'info');
-            showAlert('sendAlert', `✅ Envio concluído! ${successCount} sucessos, ${errorCount} erros`, 'success');
-            document.getElementById('sendBtn').disabled = false;
+            // Resultado final
+            showStatus(status, success > 0 ? 'success' : 'error', 
+                `✅ ${success} enviadas | ❌ ${failed} falharam`);
+            
+            // Atualizar estatísticas
+            loadHistory();
         }
 
-        // ========== FUNÇÕES AUXILIARES ==========
-        function showAlert(elementId, message, type) {
-            const element = document.getElementById(elementId);
+        // Adicionar log
+        function addLog(message, type = 'info') {
+            const logContainer = document.getElementById('logContainer');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // Mostrar status
+        function showStatus(element, type, message) {
+            element.className = `status ${type}`;
             element.textContent = message;
-            element.className = `alert ${type}`;
             element.style.display = 'block';
         }
 
-        function addLog(message, type) {
-            const container = document.getElementById('logContainer');
-            const item = document.createElement('div');
-            item.className = `log-item ${type}`;
-            item.textContent = message;
-            container.appendChild(item);
-            container.scrollTop = container.scrollHeight;
+        // Salvar no histórico
+        function saveToHistory(recipient, status, message, error = '') {
+            const record = {
+                id: Date.now(),
+                name: recipient.name,
+                number: recipient.number,
+                message: message,
+                status: status,
+                error: error,
+                timestamp: new Date().toISOString(),
+                date: new Date().toLocaleDateString('pt-BR'),
+                time: new Date().toLocaleTimeString('pt-BR')
+            };
+            
+            sendHistory.unshift(record);
+            
+            // Limitar a 1000 registros
+            if (sendHistory.length > 1000) {
+                sendHistory = sendHistory.slice(0, 1000);
+            }
+            
+            localStorage.setItem('whatsappSendHistory', JSON.stringify(sendHistory));
         }
 
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
+        // Carregar histórico e estatísticas
+        function loadHistory() {
+            sendHistory = JSON.parse(localStorage.getItem('whatsappSendHistory')) || [];
+            
+            // Calcular estatísticas
+            const totalSent = sendHistory.length;
+            const successCount = sendHistory.filter(r => r.status === 'success').length;
+            const failedCount = sendHistory.filter(r => r.status === 'failed').length;
+            const successRate = totalSent > 0 ? Math.round((successCount / totalSent) * 100) : 0;
+            
+            // Atualizar dashboard
+            document.getElementById('totalSent').textContent = totalSent;
+            document.getElementById('successRate').textContent = successRate + '%';
+            document.getElementById('totalFailed').textContent = failedCount;
+            
+            if (sendHistory.length > 0) {
+                const lastSend = new Date(sendHistory[0].timestamp);
+                document.getElementById('lastSendTime').textContent = lastSend.toLocaleTimeString('pt-BR');
+            }
+            
+            // Criar tabela de histórico
+            displayHistoryTable();
         }
+
+        // Exibir tabela de histórico
+        function displayHistoryTable() {
+            const container = document.getElementById('historyTable');
+            
+            if (sendHistory.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6c757d; padding: 20px;">Nenhum envio registrado ainda</p>';
+                return;
+            }
+            
+            let html = `
+                <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden;">
+                    <thead style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                        <tr>
+                            <th style="padding: 12px; text-align: left;">Data/Hora</th>
+                            <th style="padding: 12px; text-align: left;">Nome</th>
+                            <th style="padding: 12px; text-align: left;">Número</th>
+                            <th style="padding: 12px; text-align: left;">Mensagem</th>
+                            <th style="padding: 12px; text-align: center;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            // Mostrar apenas os últimos 50 registros
+            const recentHistory = sendHistory.slice(0, 50);
+            
+            recentHistory.forEach(record => {
+                const statusIcon = record.status === 'success' ? '✅' : '❌';
+                const statusColor = record.status === 'success' ? '#28a745' : '#dc3545';
+                const messagePreview = record.message.length > 50 ? record.message.substring(0, 50) + '...' : record.message;
+                
+                html += `
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding: 10px;">${record.date} ${record.time}</td>
+                        <td style="padding: 10px;">${record.name}</td>
+                        <td style="padding: 10px; font-family: monospace;">${record.number.split('@')[0]}</td>
+                        <td style="padding: 10px; max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${messagePreview}</td>
+                        <td style="padding: 10px; text-align: center; color: ${statusColor}; font-weight: bold;">${statusIcon}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                    </tbody>
+                </table>
+                <p style="text-align: center; color: #6c757d; margin-top: 10px; font-size: 0.9em;">
+                    Mostrando ${recentHistory.length} de ${sendHistory.length} registros
+                </p>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // Exportar para Excel
+        function exportToExcel() {
+            if (sendHistory.length === 0) {
+                alert('Nenhum dado para exportar!');
+                return;
+            }
+            
+            // Preparar dados para exportação
+            const exportData = sendHistory.map(record => ({
+                'Data': record.date,
+                'Hora': record.time,
+                'Nome': record.name,
+                'Número': record.number.split('@')[0],
+                'Mensagem': record.message,
+                'Status': record.status === 'success' ? 'Sucesso' : 'Falha',
+                'Erro': record.error || '-'
+            }));
+            
+            // Criar workbook
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Histórico de Envios');
+            
+            // Baixar arquivo
+            const fileName = `whatsapp_historico_${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+            
+            alert(`✅ Relatório exportado: ${fileName}`);
+        }
+
+        // Limpar histórico
+        function clearHistory() {
+            if (confirm('⚠️ Tem certeza que deseja limpar todo o histórico? Esta ação não pode ser desfeita.')) {
+                sendHistory = [];
+                localStorage.removeItem('whatsappSendHistory');
+                loadHistory();
+                alert('✅ Histórico limpo com sucesso!');
+            }
+        }
+
+        // Carregar estatísticas ao iniciar
+        window.addEventListener('load', function() {
+            loadHistory();
+        });
     </script>
 </body>
 </html>
