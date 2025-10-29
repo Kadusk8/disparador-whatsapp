@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disparador WhatsApp - Evolution API</title>
+    <title>Disparador WhatsApp - Evolution API 2.3.5</title>
     <style>
         * {
             margin: 0;
@@ -510,7 +510,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📱 Disparador WhatsApp - Evolution API</h1>
+            <h1>📱 Disparador WhatsApp - Evolution API 2.3.5</h1>
             <p>Envie mensagens em massa diretamente pela Evolution API</p>
         </div>
 
@@ -522,7 +522,7 @@
             <div class="config-grid">
                 <div class="form-group" style="margin-bottom: 0;">
                     <label>URL da Evolution API</label>
-                    <input type="url" id="apiUrl" placeholder="http://localhost:8080" value="http://localhost:8080">
+                    <input type="url" id="apiUrl" placeholder="https://evoapi.automacaocomia.pro" value="https://evoapi.automacaocomia.pro">
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
                     <label>API Key</label>
@@ -530,7 +530,7 @@
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
                     <label>Nome da Instância</label>
-                    <input type="text" id="instanceName" placeholder="minha-instancia">
+                    <input type="text" id="instanceName" placeholder="Atendimento Caos" value="Atendimento Caos">
                 </div>
                 <button class="btn" onclick="connectAPI()">🔌 Conectar</button>
             </div>
@@ -639,32 +639,22 @@
             <!-- Upload de Imagem -->
             <div id="imageUpload" class="media-upload-area">
                 <div class="alert alert-warning">
-                    <strong>⚠️ Atenção:</strong> Para imagens, recomendamos usar URLs. Upload direto limitado a 5MB.
+                    <strong>⚠️ Atenção:</strong> Use URLs de imagens. Upload direto limitado a 5MB.
                 </div>
                 <div class="form-group">
-                    <label>🖼️ URL da Imagem (Recomendado)</label>
+                    <label>🖼️ URL da Imagem</label>
                     <input type="url" id="imageUrl" placeholder="https://exemplo.com/imagem.jpg">
-                    <div class="help-text">Ou faça upload abaixo (máx 5MB)</div>
-                </div>
-                <div class="form-group">
-                    <div class="upload-box" onclick="document.getElementById('imageFile').click()">
-                        <div class="upload-icon">🖼️</div>
-                        <p><strong>Clique para fazer upload</strong></p>
-                        <input type="file" id="imageFile" accept="image/*" onchange="handleMediaUpload(event, 'image')">
-                    </div>
-                    <div id="imagePreview" style="display: none; margin-top: 15px; text-align: center;"></div>
                 </div>
             </div>
 
             <!-- Upload de Vídeo -->
             <div id="videoUpload" class="media-upload-area">
                 <div class="alert alert-warning">
-                    <strong>⚠️ Atenção:</strong> Para vídeos, é OBRIGATÓRIO usar URL. Faça upload em Google Drive, Dropbox ou Cloudinary.
+                    <strong>⚠️ Atenção:</strong> Use URLs de vídeos hospedados.
                 </div>
                 <div class="form-group">
-                    <label>🎥 URL do Vídeo (Obrigatório)</label>
+                    <label>🎥 URL do Vídeo</label>
                     <input type="url" id="videoUrl" placeholder="https://exemplo.com/video.mp4">
-                    <div class="help-text">Hospede seu vídeo no Google Drive, Dropbox ou Cloudinary</div>
                 </div>
             </div>
 
@@ -706,7 +696,6 @@
         let selectedContacts = [];
         let currentFilter = 'all';
         let currentMediaType = 'text';
-        let mediaBase64 = '';
 
         // Carregar configurações salvas
         window.onload = function() {
@@ -722,7 +711,7 @@
 
         // Conectar à API
         async function connectAPI() {
-            const url = document.getElementById('apiUrl').value.trim();
+            const url = document.getElementById('apiUrl').value.trim().replace(/\/$/, '');
             const key = document.getElementById('apiKey').value.trim();
             const instance = document.getElementById('instanceName').value.trim();
 
@@ -734,12 +723,19 @@
             addLog('Testando conexão com a API...', 'info');
 
             try {
-                const response = await fetch(`${url}/instance/connectionState/${instance}`, {
+                // Codificar o nome da instância para URL
+                const encodedInstance = encodeURIComponent(instance);
+                
+                const response = await fetch(`${url}/instance/connectionState/${encodedInstance}`, {
                     method: 'GET',
                     headers: {
                         'apikey': key
                     }
                 });
+
+                console.log('Status da conexão:', response.status);
+                const data = await response.json();
+                console.log('Resposta:', data);
 
                 if (response.ok) {
                     apiConfig = { url, key, instance, connected: true };
@@ -749,104 +745,136 @@
                     document.getElementById('connectionStatus').className = 'connection-status status-connected';
                     document.getElementById('configSection').classList.add('connected');
                     
-                    addLog('✅ Conectado com sucesso à Evolution API!', 'success');
+                    addLog('✅ Conectado com sucesso à Evolution API 2.3.5!', 'success');
                 } else {
-                    throw new Error('Falha na conexão');
+                    throw new Error(data.message || 'Falha na conexão');
                 }
             } catch (error) {
+                console.error('Erro:', error);
                 addLog('❌ Erro ao conectar: ' + error.message, 'error');
                 alert('❌ Erro ao conectar. Verifique as configurações!');
             }
         }
 
-        // Buscar contatos da API
+        // Buscar contatos da API - VERSÃO PARA EVOLUTION API 2.3.5
         async function fetchContacts() {
             if (!apiConfig.connected) {
                 alert('❌ Conecte-se à API primeiro!');
                 return;
             }
 
-            addLog('Buscando contatos e conversas...', 'info');
+            addLog('Buscando contatos e conversas da Evolution API 2.3.5...', 'info');
             document.getElementById('contactsList').innerHTML = '<p style="text-align: center;"><span class="loading"></span> Carregando...</p>';
 
             try {
-                // Buscar contatos
-                const contactsResponse = await fetch(`${apiConfig.url}/chat/findContacts/${apiConfig.instance}`, {
-                    headers: { 'apikey': apiConfig.key }
-                });
-
-                // Buscar conversas
-                const chatsResponse = await fetch(`${apiConfig.url}/chat/findChats/${apiConfig.instance}`, {
-                    headers: { 'apikey': apiConfig.key }
-                });
-
-                if (!contactsResponse.ok || !chatsResponse.ok) {
-                    throw new Error('Erro ao buscar dados');
-                }
-
-                const contacts = await contactsResponse.json();
-                const chats = await chatsResponse.json();
-
-                // Processar e unificar
                 allContacts = [];
                 const uniqueNumbers = new Set();
+                const encodedInstance = encodeURIComponent(apiConfig.instance);
 
-                // Processar contatos
-                if (Array.isArray(contacts)) {
-                    contacts.forEach(contact => {
-                        if (contact.id && contact.id.includes('@s.whatsapp.net')) {
-                            const number = contact.id.replace('@s.whatsapp.net', '');
-                            if (!uniqueNumbers.has(number)) {
-                                uniqueNumbers.add(number);
-                                allContacts.push({
-                                    number: number,
-                                    name: contact.pushName || contact.name || number,
-                                    type: 'contact',
-                                    id: contact.id
-                                });
-                            }
-                        }
-                    });
+                // ENDPOINT CORRETO PARA EVOLUTION API 2.3.5
+                // Buscar todos os chats (inclui contatos, grupos e conversas)
+                console.log('Buscando chats...');
+                const chatsUrl = `${apiConfig.url}/chat/findChats/${encodedInstance}`;
+                console.log('URL:', chatsUrl);
+
+                const chatsResponse = await fetch(chatsUrl, {
+                    method: 'GET',
+                    headers: { 
+                        'apikey': apiConfig.key,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log('Status:', chatsResponse.status);
+
+                if (!chatsResponse.ok) {
+                    const errorData = await chatsResponse.json();
+                    console.error('Erro da API:', errorData);
+                    throw new Error(errorData.message || 'Erro ao buscar chats');
                 }
 
-                // Processar conversas
-                if (Array.isArray(chats)) {
-                    chats.forEach(chat => {
-                        if (chat.id) {
-                            if (chat.id.includes('@s.whatsapp.net')) {
-                                const number = chat.id.replace('@s.whatsapp.net', '');
-                                if (!uniqueNumbers.has(number)) {
-                                    uniqueNumbers.add(number);
-                                    allContacts.push({
-                                        number: number,
-                                        name: chat.name || number,
-                                        type: 'chat',
-                                        id: chat.id
-                                    });
-                                }
-                            } else if (chat.id.includes('@g.us')) {
-                                const groupId = chat.id;
-                                if (!uniqueNumbers.has(groupId)) {
-                                    uniqueNumbers.add(groupId);
-                                    allContacts.push({
-                                        number: groupId,
-                                        name: chat.name || 'Grupo',
-                                        type: 'group',
-                                        id: chat.id
-                                    });
-                                }
-                            }
-                        }
-                    });
+                const chatsData = await chatsResponse.json();
+                console.log('Dados recebidos:', chatsData);
+
+                // Processar resposta (pode vir em diferentes formatos)
+                let chats = [];
+                if (Array.isArray(chatsData)) {
+                    chats = chatsData;
+                } else if (chatsData.data && Array.isArray(chatsData.data)) {
+                    chats = chatsData.data;
+                } else if (chatsData.chats && Array.isArray(chatsData.chats)) {
+                    chats = chatsData.chats;
                 }
 
-                addLog(`✅ ${allContacts.length} contatos/conversas encontrados!`, 'success');
+                console.log(`${chats.length} chats encontrados`);
+
+                // Processar cada chat
+                chats.forEach(chat => {
+                    let number = '';
+                    let name = '';
+                    let type = 'chat';
+
+                    // Extrair ID/número
+                    if (chat.id) {
+                        if (chat.id.includes('@g.us')) {
+                            number = chat.id;
+                            type = 'group';
+                            name = chat.name || 'Grupo';
+                        } else if (chat.id.includes('@s.whatsapp.net')) {
+                            number = chat.id.replace('@s.whatsapp.net', '');
+                            type = 'contact';
+                            name = chat.pushName || chat.name || number;
+                        } else if (chat.id.includes('@c.us')) {
+                            number = chat.id.replace('@c.us', '');
+                            type = 'contact';
+                            name = chat.pushName || chat.name || number;
+                        }
+                    }
+
+                    // Adicionar à lista se for válido e único
+                    if (number && !uniqueNumbers.has(number)) {
+                        uniqueNumbers.add(number);
+                        allContacts.push({
+                            number: number,
+                            name: name,
+                            type: type,
+                            id: chat.id
+                        });
+                    }
+                });
+
+                if (allContacts.length === 0) {
+                    throw new Error('Nenhum contato encontrado. Verifique se a instância está conectada ao WhatsApp.');
+                }
+
+                addLog(`✅ ${allContacts.length} contatos/conversas carregados!`, 'success');
                 updateStats();
                 renderContacts();
 
             } catch (error) {
-                addLog('❌ Erro ao buscar contatos: ' + error.message, 'error');
-                document.getElementById('contactsList').innerHTML = '<p style="text-align: center; color: #ff4444;">Erro ao carregar contatos</p>';
+                console.error('Erro completo:', error);
+                addLog('❌ Erro: ' + error.message, 'error');
+                
+                document.getElementById('contactsList').innerHTML = `
+                    <div style="padding: 20px; text-align: left;">
+                        <h4 style="color: #ff4444; margin-bottom: 15px;">❌ Erro ao buscar contatos</h4>
+                        <p style="margin-bottom: 10px;"><strong>Erro:</strong> ${error.message}</p>
+                        <p style="margin-bottom: 10px;"><strong>Possíveis causas:</strong></p>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li>Instância não está conectada ao WhatsApp</li>
+                            <li>Nome da instância incorreto: "${apiConfig.instance}"</li>
+                            <li>API Key sem permissões</li>
+                            <li>WhatsApp não tem conversas/contatos</li>
+                        </ul>
+                        <p style="margin-top: 15px;"><strong>🔍 Verifique:</strong></p>
+                        <ol style="margin-left: 20px; line-height: 1.8;">
+                            <li>Abra o Console (F12) e veja os erros</li>
+                            <li>Verifique se a instância está conectada no painel da Evolution API</li>
+                            <li>Teste manualmente: <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-size: 11px; display: block; margin-top: 5px; word-break: break-all;">${apiConfig.url}/chat/findChats/${encodeURIComponent(apiConfig.instance)}</code></li>
+                        </ol>
+                        <button class="btn" onclick="fetchContacts()" style="margin-top: 15px;">🔄 Tentar Novamente</button>
+                    </div>
+                `;
             }
         }
 
@@ -995,7 +1023,7 @@
                         number: num,
                         name: num,
                         type: 'spreadsheet',
-                        id: num
+                        id: num + '@s.whatsapp.net'
                     }));
 
                     selectedContacts = numbers;
@@ -1051,33 +1079,6 @@
             }
         }
 
-        // Upload de mídia
-        function handleMediaUpload(event, type) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            // Verificar tamanho
-            const maxSize = 5 * 1024 * 1024; // 5MB
-            if (file.size > maxSize) {
-                alert('❌ Arquivo muito grande! Máximo 5MB. Use URL para arquivos maiores.');
-                return;
-            }
-
-            addLog(`Carregando ${type}: ${file.name}`, 'info');
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                mediaBase64 = e.target.result.split(',')[1];
-                
-                const preview = document.getElementById('imagePreview');
-                preview.style.display = 'block';
-                preview.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 200px; border-radius: 8px;">`;
-                
-                addLog(`✅ ${type} carregada com sucesso!`, 'success');
-            };
-            reader.readAsDataURL(file);
-        }
-
         // Iniciar envio
         async function startSending() {
             if (!apiConfig.connected) {
@@ -1124,7 +1125,11 @@
             // Obter mídia
             let mediaUrl = '';
             if (currentMediaType === 'image') {
-                mediaUrl = document.getElementById('imageUrl').value.trim() || mediaBase64;
+                mediaUrl = document.getElementById('imageUrl').value.trim();
+                if (!mediaUrl) {
+                    alert('❌ Informe a URL da imagem!');
+                    return;
+                }
             } else if (currentMediaType === 'video') {
                 mediaUrl = document.getElementById('videoUrl').value.trim();
                 if (!mediaUrl) {
@@ -1148,6 +1153,7 @@
 
             let sent = 0;
             let errors = 0;
+            const encodedInstance = encodeURIComponent(apiConfig.instance);
 
             for (let i = 0; i < numbersToSend.length; i++) {
                 const number = numbersToSend[i];
@@ -1161,9 +1167,9 @@
 
                     // Enviar mensagem
                     if (currentMediaType === 'text') {
-                        await sendTextMessage(number, message);
+                        await sendTextMessage(number, message, encodedInstance);
                     } else {
-                        await sendMediaMessage(number, message, mediaUrl, currentMediaType);
+                        await sendMediaMessage(number, message, mediaUrl, currentMediaType, encodedInstance);
                     }
 
                     sent++;
@@ -1186,9 +1192,9 @@
             addLog(`🎉 Envio concluído! ${sent} mensagens enviadas, ${errors} erros`, sent > 0 ? 'success' : 'error');
         }
 
-        // Enviar mensagem de texto
-        async function sendTextMessage(number, text) {
-            const response = await fetch(`${apiConfig.url}/message/sendText/${apiConfig.instance}`, {
+        // Enviar mensagem de texto - EVOLUTION API 2.3.5
+        async function sendTextMessage(number, text, encodedInstance) {
+            const response = await fetch(`${apiConfig.url}/message/sendText/${encodedInstance}`, {
                 method: 'POST',
                 headers: {
                     'apikey': apiConfig.key,
@@ -1201,15 +1207,16 @@
             });
 
             if (!response.ok) {
-                throw new Error('Falha no envio');
+                const error = await response.json();
+                throw new Error(error.message || 'Falha no envio');
             }
 
             return await response.json();
         }
 
-        // Enviar mensagem com mídia
-        async function sendMediaMessage(number, caption, media, mediaType) {
-            const response = await fetch(`${apiConfig.url}/message/sendMedia/${apiConfig.instance}`, {
+        // Enviar mensagem com mídia - EVOLUTION API 2.3.5
+        async function sendMediaMessage(number, caption, media, mediaType, encodedInstance) {
+            const response = await fetch(`${apiConfig.url}/message/sendMedia/${encodedInstance}`, {
                 method: 'POST',
                 headers: {
                     'apikey': apiConfig.key,
