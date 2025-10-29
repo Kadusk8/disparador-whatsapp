@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Disparador WhatsApp - Evolution API</title>
     <style>
+        /* ============================================
+           ESTILOS GERAIS
+           ============================================ */
         * {
             margin: 0;
             padding: 0;
@@ -27,6 +30,9 @@
             overflow: hidden;
         }
 
+        /* ============================================
+           HEADER
+           ============================================ */
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -44,6 +50,9 @@
             font-size: 1.1em;
         }
 
+        /* ============================================
+           SEÇÃO DE CONFIGURAÇÃO DA API
+           ============================================ */
         .config-section {
             padding: 30px;
             background: #f8f9fa;
@@ -83,6 +92,9 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
+        /* ============================================
+           BOTÕES
+           ============================================ */
         .btn {
             padding: 12px 30px;
             border: none;
@@ -132,6 +144,9 @@
             transform: none !important;
         }
 
+        /* ============================================
+           STATUS DE CONEXÃO
+           ============================================ */
         .status {
             display: inline-flex;
             align-items: center;
@@ -152,6 +167,9 @@
             color: #721c24;
         }
 
+        /* ============================================
+           SISTEMA DE ABAS
+           ============================================ */
         .tabs {
             display: flex;
             background: #f8f9fa;
@@ -192,6 +210,9 @@
             display: block;
         }
 
+        /* ============================================
+           LISTA DE CONTATOS
+           ============================================ */
         .contacts-header {
             display: flex;
             gap: 15px;
@@ -270,6 +291,9 @@
             color: #856404;
         }
 
+        /* ============================================
+           ESTATÍSTICAS
+           ============================================ */
         .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -296,6 +320,9 @@
             font-size: 0.9em;
         }
 
+        /* ============================================
+           CONFIGURAÇÃO DE MENSAGEM
+           ============================================ */
         .message-config {
             background: #f8f9fa;
             padding: 20px;
@@ -325,6 +352,9 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
+        /* ============================================
+           OPÇÕES DE MÍDIA
+           ============================================ */
         .media-options {
             display: flex;
             gap: 10px;
@@ -402,6 +432,9 @@
             border-radius: 8px;
         }
 
+        /* ============================================
+           BARRA DE PROGRESSO
+           ============================================ */
         .progress-container {
             margin-top: 20px;
             display: none;
@@ -439,6 +472,9 @@
             font-size: 0.9em;
         }
 
+        /* ============================================
+           CONTAINER DE LOGS
+           ============================================ */
         .log-container {
             margin-top: 20px;
             max-height: 300px;
@@ -477,6 +513,9 @@
             color: #17a2b8;
         }
 
+        /* ============================================
+           LOADING SPINNER
+           ============================================ */
         .loading {
             display: inline-block;
             width: 20px;
@@ -491,6 +530,9 @@
             to { transform: rotate(360deg); }
         }
 
+        /* ============================================
+           ENTRADA MANUAL
+           ============================================ */
         .manual-input {
             margin-top: 15px;
         }
@@ -499,6 +541,9 @@
             min-height: 200px;
         }
 
+        /* ============================================
+           TEXTOS DE AJUDA E ALERTAS
+           ============================================ */
         .help-text {
             font-size: 0.85em;
             color: #6c757d;
@@ -523,6 +568,9 @@
             border: 1px solid #ffeaa7;
         }
 
+        /* ============================================
+           CONFIGURAÇÃO DE DELAY
+           ============================================ */
         .delay-config {
             display: flex;
             align-items: center;
@@ -545,6 +593,9 @@
             border-radius: 8px;
         }
 
+        /* ============================================
+           RESPONSIVIDADE
+           ============================================ */
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 1.8em;
@@ -570,11 +621,17 @@
 </head>
 <body>
     <div class="container">
+        <!-- ============================================
+             HEADER
+             ============================================ -->
         <div class="header">
             <h1>📱 Disparador WhatsApp</h1>
             <p>Evolution API - Envio em Massa Profissional</p>
         </div>
 
+        <!-- ============================================
+             SEÇÃO DE CONFIGURAÇÃO DA API
+             ============================================ -->
         <div class="config-section">
             <div class="config-grid">
                 <div class="form-group">
@@ -598,6 +655,9 @@
             </div>
         </div>
 
+        <!-- ============================================
+             SISTEMA DE ABAS
+             ============================================ -->
         <div class="tabs">
             <button class="tab active" onclick="switchTab('api')">🌐 Todos da API</button>
             <button class="tab" onclick="switchTab('contacts')">👥 Apenas Contatos</button>
@@ -607,7 +667,9 @@
             <button class="tab" onclick="switchTab('manual')">✍️ Manual</button>
         </div>
 
-        <!-- ABA: TODOS DA API -->
+        <!-- ============================================
+             ABA: TODOS DA API
+             ============================================ -->
         <div id="tab-api" class="tab-content active">
             <div class="alert alert-info">
                 <strong>ℹ️ Modo: Todos da API</strong><br>
@@ -676,7 +738,9 @@
             <div class="log-container" id="logContainer"></div>
         </div>
 
-        <!-- ABA: APENAS CONTATOS -->
+        <!-- ============================================
+             ABA: APENAS CONTATOS
+             ============================================ -->
         <div id="tab-contacts" class="tab-content">
             <div class="alert alert-info">
                 <strong>ℹ️ Modo: Apenas Contatos</strong><br>
@@ -688,7 +752,9 @@
             </p>
         </div>
 
-        <!-- ABA: APENAS CONVERSAS -->
+        <!-- ============================================
+             ABA: APENAS CONVERSAS
+             ============================================ -->
         <div id="tab-conversations" class="tab-content">
             <div class="alert alert-info">
                 <strong>ℹ️ Modo: Apenas Conversas</strong><br>
@@ -700,7 +766,9 @@
             </p>
         </div>
 
-        <!-- ABA: APENAS GRUPOS -->
+        <!-- ============================================
+             ABA: APENAS GRUPOS
+             ============================================ -->
         <div id="tab-groups" class="tab-content">
             <div class="alert alert-info">
                 <strong>ℹ️ Modo: Apenas Grupos</strong><br>
@@ -712,7 +780,9 @@
             </p>
         </div>
 
-        <!-- ABA: PLANILHA -->
+        <!-- ============================================
+             ABA: PLANILHA
+             ============================================ -->
         <div id="tab-spreadsheet" class="tab-content">
             <div class="alert alert-info">
                 <strong>ℹ️ Modo: Upload de Planilha</strong><br>
@@ -768,7 +838,9 @@
             <div class="log-container" id="logContainerSpreadsheet"></div>
         </div>
 
-        <!-- ABA: MANUAL -->
+        <!-- ============================================
+             ABA: MANUAL
+             ============================================ -->
         <div id="tab-manual" class="tab-content">
             <div class="alert alert-info">
                 <strong>ℹ️ Modo: Entrada Manual</strong><br>
@@ -822,274 +894,220 @@
     </div>
 
     <script>
-        // Configuração da API
+        /* ############################################################
+           VARIÁVEIS GLOBAIS
+           ############################################################ */
+        
+        // Configuração da API Evolution
         let apiConfig = {
-            url: '',
-            key: '',
-            instance: '',
-            connected: false
+            url: '',        // URL base da API
+            key: '',        // API Key para autenticação
+            instance: '',   // Nome da instância WhatsApp
+            connected: false // Status da conexão
         };
 
-        // Dados
-        let allContacts = [];
-        let selectedMediaType = 'text';
-        let currentMode = 'api';
+        // Dados dos contatos
+        let allContacts = [];           // Array com todos os contatos carregados
+        let selectedMediaType = 'text'; // Tipo de mídia selecionado (text, image, video)
+        let currentMode = 'api';        // Modo atual (api, spreadsheet, manual)
 
-        // Conectar à API
+
+        /* ############################################################
+           FUNÇÃO: CONECTAR À API
+           Descrição: Valida e armazena as credenciais da Evolution API
+           ############################################################ */
         function connectAPI() {
+            // Obter valores dos campos
             const url = document.getElementById('apiUrl').value.trim();
             const key = document.getElementById('apiKey').value.trim();
             const instance = document.getElementById('instanceName').value.trim();
 
+            // Validar campos obrigatórios
             if (!url || !key || !instance) {
                 alert('❌ Preencha todos os campos!');
                 return;
             }
 
-            apiConfig.url = url.replace(/\/$/, ''); // Remove barra final
+            // Armazenar configurações
+            apiConfig.url = url.replace(/\/$/, ''); // Remove barra final se existir
             apiConfig.key = key;
             apiConfig.instance = instance;
             apiConfig.connected = true;
 
+            // Atualizar interface
             document.getElementById('connectionStatus').className = 'status connected';
             document.getElementById('connectionStatus').innerHTML = '🟢 Conectado';
 
+            // Log de sucesso
             addLog('✅ Conectado à Evolution API!', 'success');
             alert('✅ Conectado com sucesso!');
         }
 
-        // Buscar contatos da API - VERSÃO COMPLETA PARA EVOLUTION API 2.3.5
+
+        /* ############################################################
+           FUNÇÃO: BUSCAR CONTATOS DA API
+           Descrição: Busca todos os contatos da instância WhatsApp
+           Endpoint: POST /chat/findContacts/{instance}
+           ############################################################ */
         async function fetchContacts() {
+            // Verificar se está conectado
             if (!apiConfig.connected) {
                 alert('❌ Conecte-se à API primeiro!');
                 return;
             }
 
-            addLog('Buscando contatos e conversas da Evolution API 2.3.5...', 'info');
+            // Mostrar loading
+            addLog('Buscando contatos da Evolution API...', 'info');
             document.getElementById('contactsList').innerHTML = '<p style="text-align: center;"><span class="loading"></span> Carregando...</p>';
 
             try {
+                // Limpar dados anteriores
                 allContacts = [];
-                const uniqueNumbers = new Set();
+                const uniqueNumbers = new Set(); // Para evitar duplicatas
                 const encodedInstance = encodeURIComponent(apiConfig.instance);
 
-                // LISTA DE ENDPOINTS PARA TESTAR (Evolution API 2.3.5)
-                const endpoints = [
-                    `/chat/findChats/${encodedInstance}`,
-                    `/chat/fetchAllContacts/${encodedInstance}`,
-                    `/contact/fetchProfile/${encodedInstance}`,
-                    `/instance/fetchContacts/${encodedInstance}`,
-                ];
+                // Montar URL do endpoint
+                const url = `${apiConfig.url}/chat/findContacts/${encodedInstance}`;
+                console.log('🔍 URL:', url);
+                addLog(`Buscando em: ${url}`, 'info');
 
-                let successCount = 0;
+                // Fazer requisição POST
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 
+                        'apikey': apiConfig.key,
+                        'Content-Type': 'application/json'
+                    }
+                });
 
-                // TENTAR CADA ENDPOINT
-                for (const endpoint of endpoints) {
-                    try {
-                        const url = `${apiConfig.url}${endpoint}`;
-                        console.log('🔍 Tentando:', url);
-                        addLog(`Testando: ${endpoint}`, 'info');
+                console.log('Status:', response.status);
 
-                        const response = await fetch(url, {
-                            method: 'GET',
-                            headers: { 
-                                'apikey': apiConfig.key,
-                                'Content-Type': 'application/json'
-                            }
-                        });
+                // Verificar se houve erro
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error('Erro da API:', errorData);
+                    throw new Error(errorData.message || 'Erro ao buscar contatos');
+                }
 
-                        console.log(`Status ${endpoint}:`, response.status);
+                // Processar resposta
+                const data = await response.json();
+                console.log('Dados recebidos:', data);
 
-                        if (response.ok) {
-                            const data = await response.json();
-                            console.log(`Dados de ${endpoint}:`, data);
+                // A resposta pode vir em diferentes formatos, vamos tentar todos
+                let contacts = [];
+                
+                if (Array.isArray(data)) {
+                    contacts = data;
+                } else if (data.data && Array.isArray(data.data)) {
+                    contacts = data.data;
+                } else if (data.contacts && Array.isArray(data.contacts)) {
+                    contacts = data.contacts;
+                } else if (data.response && Array.isArray(data.response)) {
+                    contacts = data.response;
+                }
 
-                            // Processar resposta (diferentes formatos)
-                            let items = [];
-                            
-                            if (Array.isArray(data)) {
-                                items = data;
-                            } else if (data.data && Array.isArray(data.data)) {
-                                items = data.data;
-                            } else if (data.chats && Array.isArray(data.chats)) {
-                                items = data.chats;
-                            } else if (data.contacts && Array.isArray(data.contacts)) {
-                                items = data.contacts;
-                            } else if (data.response && Array.isArray(data.response)) {
-                                items = data.response;
-                            }
+                console.log(`${contacts.length} contatos encontrados`);
 
-                            console.log(`${items.length} itens encontrados em ${endpoint}`);
+                // Processar cada contato
+                contacts.forEach(contact => {
+                    let number = '';
+                    let name = '';
+                    let type = 'contact';
 
-                            // Processar cada item
-                            items.forEach(item => {
-                                let number = '';
-                                let name = '';
-                                let type = 'contact';
-
-                                // Extrair ID/número (múltiplos formatos)
-                                if (item.id) {
-                                    if (item.id.includes('@g.us')) {
-                                        number = item.id;
-                                        type = 'group';
-                                    } else if (item.id.includes('@s.whatsapp.net')) {
-                                        number = item.id.replace('@s.whatsapp.net', '');
-                                    } else if (item.id.includes('@c.us')) {
-                                        number = item.id.replace('@c.us', '');
-                                    } else {
-                                        number = item.id;
-                                    }
-                                } else if (item.jid) {
-                                    if (item.jid.includes('@g.us')) {
-                                        number = item.jid;
-                                        type = 'group';
-                                    } else {
-                                        number = item.jid.replace('@s.whatsapp.net', '').replace('@c.us', '');
-                                    }
-                                } else if (item.number) {
-                                    number = item.number;
-                                } else if (item.remoteJid) {
-                                    number = item.remoteJid.replace('@s.whatsapp.net', '').replace('@c.us', '');
-                                }
-
-                                // Extrair nome
-                                name = item.pushName || item.name || item.notify || item.verifiedName || number;
-
-                                // Adicionar se válido e único
-                                if (number && !uniqueNumbers.has(number)) {
-                                    uniqueNumbers.add(number);
-                                    allContacts.push({
-                                        number: number,
-                                        name: name,
-                                        type: type,
-                                        id: item.id || item.jid || number
-                                    });
-                                }
-                            });
-
-                            if (items.length > 0) {
-                                successCount++;
-                                addLog(`✅ ${items.length} itens de ${endpoint}`, 'success');
-                            }
+                    // Extrair ID/número (pode vir em diferentes formatos)
+                    if (contact.id) {
+                        if (contact.id.includes('@g.us')) {
+                            // É um grupo
+                            number = contact.id;
+                            type = 'group';
+                        } else if (contact.id.includes('@s.whatsapp.net')) {
+                            // Contato individual (formato novo)
+                            number = contact.id.replace('@s.whatsapp.net', '');
+                        } else if (contact.id.includes('@c.us')) {
+                            // Contato individual (formato antigo)
+                            number = contact.id.replace('@c.us', '');
                         } else {
-                            const errorData = await response.json();
-                            console.error(`Erro em ${endpoint}:`, errorData);
+                            // Apenas número
+                            number = contact.id;
                         }
-
-                    } catch (error) {
-                        console.error(`Erro em ${endpoint}:`, error);
+                    } else if (contact.jid) {
+                        // Alternativa: campo jid
+                        if (contact.jid.includes('@g.us')) {
+                            number = contact.jid;
+                            type = 'group';
+                        } else {
+                            number = contact.jid.replace('@s.whatsapp.net', '').replace('@c.us', '');
+                        }
+                    } else if (contact.number) {
+                        // Alternativa: campo number
+                        number = contact.number;
+                    } else if (contact.remoteJid) {
+                        // Alternativa: campo remoteJid
+                        if (contact.remoteJid.includes('@g.us')) {
+                            number = contact.remoteJid;
+                            type = 'group';
+                        } else {
+                            number = contact.remoteJid.replace('@s.whatsapp.net', '').replace('@c.us', '');
+                        }
                     }
-                }
 
-                // VERIFICAR SE ENCONTROU ALGO
-                if (allContacts.length === 0) {
-                    // Tentar buscar mensagens recentes como último recurso
-                    try {
-                        addLog('Tentando buscar mensagens recentes...', 'info');
-                        const messagesUrl = `${apiConfig.url}/chat/findMessages/${encodedInstance}`;
-                        console.log('🔍 Tentando mensagens:', messagesUrl);
+                    // Extrair nome (tentar vários campos)
+                    name = contact.pushName || contact.name || contact.notify || contact.verifiedName || number;
 
-                        const messagesResponse = await fetch(messagesUrl, {
-                            method: 'POST',
-                            headers: { 
-                                'apikey': apiConfig.key,
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                limit: 100
-                            })
+                    // Adicionar à lista se for válido e único
+                    if (number && !uniqueNumbers.has(number)) {
+                        uniqueNumbers.add(number);
+                        allContacts.push({
+                            number: number,
+                            name: name,
+                            type: type,
+                            id: contact.id || contact.jid || contact.remoteJid || number
                         });
-
-                        if (messagesResponse.ok) {
-                            const messagesData = await messagesResponse.json();
-                            console.log('Mensagens:', messagesData);
-
-                            let messages = [];
-                            if (Array.isArray(messagesData)) {
-                                messages = messagesData;
-                            } else if (messagesData.data && Array.isArray(messagesData.data)) {
-                                messages = messagesData.data;
-                            } else if (messagesData.messages && Array.isArray(messagesData.messages)) {
-                                messages = messagesData.messages;
-                            }
-
-                            messages.forEach(msg => {
-                                if (msg.key && msg.key.remoteJid) {
-                                    const jid = msg.key.remoteJid;
-                                    let number = '';
-                                    let type = 'chat';
-
-                                    if (jid.includes('@g.us')) {
-                                        number = jid;
-                                        type = 'group';
-                                    } else {
-                                        number = jid.replace('@s.whatsapp.net', '').replace('@c.us', '');
-                                    }
-
-                                    if (number && !uniqueNumbers.has(number)) {
-                                        uniqueNumbers.add(number);
-                                        allContacts.push({
-                                            number: number,
-                                            name: msg.pushName || number,
-                                            type: type,
-                                            id: jid
-                                        });
-                                    }
-                                }
-                            });
-
-                            if (messages.length > 0) {
-                                addLog(`✅ ${messages.length} conversas de mensagens`, 'success');
-                            }
-                        }
-                    } catch (error) {
-                        console.error('Erro ao buscar mensagens:', error);
                     }
-                }
+                });
 
-                // RESULTADO FINAL
+                // Verificar se encontrou contatos
                 if (allContacts.length === 0) {
-                    throw new Error('Nenhum contato/conversa encontrado. Verifique se:\n1. A instância está conectada ao WhatsApp\n2. Há conversas/contatos no WhatsApp\n3. A API Key tem permissões corretas');
+                    throw new Error('Nenhum contato encontrado. Verifique se há contatos no WhatsApp.');
                 }
 
+                // Sucesso!
                 console.log('✅ Total de contatos únicos:', allContacts.length);
-                addLog(`🎉 ${allContacts.length} contatos/conversas carregados!`, 'success');
+                addLog(`🎉 ${allContacts.length} contatos carregados!`, 'success');
                 updateStats();
                 renderContacts();
 
             } catch (error) {
+                // Tratar erros
                 console.error('❌ Erro completo:', error);
                 addLog('❌ Erro: ' + error.message, 'error');
                 
+                // Mostrar mensagem de erro detalhada
                 document.getElementById('contactsList').innerHTML = `
                     <div style="padding: 20px; text-align: left;">
-                        <h4 style="color: #ff4444; margin-bottom: 15px;">❌ Não foi possível buscar contatos</h4>
+                        <h4 style="color: #ff4444; margin-bottom: 15px;">❌ Erro ao buscar contatos</h4>
                         <p style="margin-bottom: 10px;"><strong>Erro:</strong> ${error.message}</p>
                         
                         <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0;">
                             <p style="margin-bottom: 10px;"><strong>🔍 Verifique:</strong></p>
                             <ol style="margin-left: 20px; line-height: 1.8;">
-                                <li><strong>Instância conectada?</strong> Acesse o painel da Evolution API e veja se a instância "atendimento" está com status "open"</li>
-                                <li><strong>WhatsApp tem conversas?</strong> Abra o WhatsApp Web e veja se há conversas/contatos</li>
-                                <li><strong>API Key correta?</strong> Verifique se a API Key tem permissões de leitura</li>
-                                <li><strong>Nome da instância:</strong> Confirme que é exatamente "atendimento" (minúsculo, sem espaços)</li>
+                                <li>Instância está conectada ao WhatsApp?</li>
+                                <li>API Key está correta?</li>
+                                <li>Nome da instância: "${apiConfig.instance}"</li>
+                                <li>Há contatos no WhatsApp?</li>
                             </ol>
                         </div>
 
                         <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                            <p style="margin-bottom: 10px;"><strong>🧪 Teste manual:</strong></p>
-                            <p style="font-size: 12px; margin-bottom: 5px;">Abra uma nova aba e teste esta URL:</p>
-                            <code style="background: #fff; padding: 8px; border-radius: 4px; display: block; font-size: 11px; word-break: break-all; margin-top: 5px;">
-                                ${apiConfig.url}/chat/findChats/${encodeURIComponent(apiConfig.instance)}
+                            <p style="margin-bottom: 10px;"><strong>🧪 Endpoint testado:</strong></p>
+                            <code style="background: #fff; padding: 8px; border-radius: 4px; display: block; font-size: 11px; word-break: break-all;">
+                                POST ${apiConfig.url}/chat/findContacts/${encodeURIComponent(apiConfig.instance)}
                             </code>
-                            <p style="font-size: 12px; margin-top: 10px; color: #666;">
-                                Adicione o header: <code style="background: #fff; padding: 2px 6px;">apikey: SUA_API_KEY</code>
-                            </p>
                         </div>
 
                         <div style="background: #f0fff4; padding: 15px; border-radius: 8px; margin: 15px 0;">
                             <p style="margin-bottom: 10px;"><strong>💡 Alternativa:</strong></p>
-                            <p>Se a instância não tem conversas ainda, use a aba <strong>"📊 Planilha"</strong> ou <strong>"✍️ Manual"</strong> para adicionar números manualmente.</p>
+                            <p>Use a aba <strong>"📊 Planilha"</strong> ou <strong>"✍️ Manual"</strong> para adicionar números manualmente.</p>
                         </div>
 
                         <button class="btn" onclick="fetchContacts()" style="margin-top: 15px;">🔄 Tentar Novamente</button>
@@ -1098,15 +1116,21 @@
             }
         }
 
-        // Renderizar lista de contatos
+
+        /* ############################################################
+           FUNÇÃO: RENDERIZAR LISTA DE CONTATOS
+           Descrição: Exibe os contatos na interface com checkboxes
+           ############################################################ */
         function renderContacts() {
             const container = document.getElementById('contactsList');
             
+            // Verificar se há contatos
             if (allContacts.length === 0) {
                 container.innerHTML = '<p style="text-align: center; color: #6c757d;">Nenhum contato encontrado</p>';
                 return;
             }
 
+            // Gerar HTML para cada contato
             let html = '';
             allContacts.forEach((contact, index) => {
                 const badgeClass = contact.type === 'group' ? 'badge-group' : 'badge-contact';
@@ -1127,7 +1151,11 @@
             container.innerHTML = html;
         }
 
-        // Atualizar estatísticas
+
+        /* ############################################################
+           FUNÇÃO: ATUALIZAR ESTATÍSTICAS
+           Descrição: Atualiza contadores de total e selecionados
+           ############################################################ */
         function updateStats() {
             const total = allContacts.length;
             const selected = document.querySelectorAll('#contactsList input[type="checkbox"]:checked').length;
@@ -1136,7 +1164,10 @@
             document.getElementById('selectedContacts').textContent = selected;
         }
 
-        // Selecionar todos
+
+        /* ############################################################
+           FUNÇÃO: SELECIONAR TODOS OS CONTATOS
+           ############################################################ */
         function selectAll() {
             document.querySelectorAll('#contactsList input[type="checkbox"]').forEach(cb => {
                 cb.checked = true;
@@ -1144,7 +1175,10 @@
             updateStats();
         }
 
-        // Limpar seleção
+
+        /* ############################################################
+           FUNÇÃO: LIMPAR SELEÇÃO DE CONTATOS
+           ############################################################ */
         function clearSelection() {
             document.querySelectorAll('#contactsList input[type="checkbox"]').forEach(cb => {
                 cb.checked = false;
@@ -1152,7 +1186,11 @@
             updateStats();
         }
 
-        // Filtrar contatos
+
+        /* ############################################################
+           FUNÇÃO: FILTRAR CONTATOS
+           Descrição: Filtra contatos em tempo real pela busca
+           ############################################################ */
         function filterContacts() {
             const search = document.getElementById('searchBox').value.toLowerCase();
             const items = document.querySelectorAll('.contact-item');
@@ -1163,7 +1201,11 @@
             });
         }
 
-        // Trocar aba
+
+        /* ############################################################
+           FUNÇÃO: TROCAR ABA
+           Descrição: Alterna entre as diferentes abas do sistema
+           ############################################################ */
         function switchTab(tab) {
             // Remover active de todas as abas
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -1176,17 +1218,27 @@
             currentMode = tab;
         }
 
-        // Selecionar tipo de mídia
+
+        /* ############################################################
+           FUNÇÃO: SELECIONAR TIPO DE MÍDIA
+           Descrição: Define se vai enviar texto, imagem ou vídeo
+           Parâmetros:
+           - type: 'text', 'image' ou 'video'
+           - mode: 'api', 'spreadsheet' ou 'manual'
+           ############################################################ */
         function selectMediaType(type, mode = 'api') {
             selectedMediaType = type;
             
+            // Determinar sufixo do ID baseado no modo
             const suffix = mode === 'api' ? '' : mode.charAt(0).toUpperCase() + mode.slice(1);
             const buttons = document.querySelectorAll(`#tab-${mode} .media-btn`);
             const mediaUpload = document.getElementById(`mediaUpload${suffix}`);
             
+            // Atualizar botões
             buttons.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
+            // Mostrar/ocultar área de upload
             if (type === 'text') {
                 mediaUpload.style.display = 'none';
             } else {
@@ -1194,7 +1246,13 @@
             }
         }
 
-        // Preview de mídia
+
+        /* ############################################################
+           FUNÇÃO: PREVIEW DE MÍDIA
+           Descrição: Mostra preview da imagem/vídeo selecionado
+           Parâmetros:
+           - mode: 'api', 'spreadsheet' ou 'manual'
+           ############################################################ */
         function previewMedia(mode = 'api') {
             const suffix = mode === 'api' ? '' : mode.charAt(0).toUpperCase() + mode.slice(1);
             const fileInput = document.getElementById(`mediaFile${suffix}`);
@@ -1217,13 +1275,19 @@
             }
         }
 
-        // Enviar mensagens (API)
+
+        /* ############################################################
+           FUNÇÃO: ENVIAR MENSAGENS (MODO API)
+           Descrição: Envia mensagens para contatos selecionados da API
+           ############################################################ */
         async function sendMessages() {
+            // Verificar conexão
             if (!apiConfig.connected) {
                 alert('❌ Conecte-se à API primeiro!');
                 return;
             }
 
+            // Obter contatos selecionados
             const selectedContacts = [];
             document.querySelectorAll('#contactsList input[type="checkbox"]:checked').forEach((cb, index) => {
                 const contactIndex = parseInt(cb.id.replace('contact-', ''));
@@ -1235,15 +1299,17 @@
                 return;
             }
 
+            // Obter mensagem
             const message = document.getElementById('messageText').value.trim();
             if (!message) {
                 alert('❌ Digite uma mensagem!');
                 return;
             }
 
+            // Obter delay
             const delay = parseInt(document.getElementById('messageDelay').value) * 1000;
             
-            // Preparar mídia
+            // Preparar mídia (se houver)
             let mediaUrl = '';
             if (selectedMediaType !== 'text') {
                 const urlInput = document.getElementById('mediaUrl').value.trim();
@@ -1252,7 +1318,7 @@
                 if (urlInput) {
                     mediaUrl = urlInput;
                 } else if (fileInput.files && fileInput.files[0]) {
-                    // Converter para base64
+                    // Converter arquivo para base64
                     const file = fileInput.files[0];
                     mediaUrl = await fileToBase64(file);
                 } else {
@@ -1265,7 +1331,11 @@
             await sendBatch(selectedContacts, message, mediaUrl, delay, 'api');
         }
 
-        // Enviar mensagens (Planilha)
+
+        /* ############################################################
+           FUNÇÃO: ENVIAR MENSAGENS (MODO PLANILHA)
+           Descrição: Envia mensagens para números da planilha
+           ############################################################ */
         async function sendMessagesSpreadsheet() {
             if (!apiConfig.connected) {
                 alert('❌ Conecte-se à API primeiro!');
@@ -1304,7 +1374,11 @@
             await sendBatch(allContacts, message, mediaUrl, delay, 'spreadsheet');
         }
 
-        // Enviar mensagens (Manual)
+
+        /* ############################################################
+           FUNÇÃO: ENVIAR MENSAGENS (MODO MANUAL)
+           Descrição: Envia mensagens para números digitados manualmente
+           ############################################################ */
         async function sendMessagesManual() {
             if (!apiConfig.connected) {
                 alert('❌ Conecte-se à API primeiro!');
@@ -1317,12 +1391,14 @@
                 return;
             }
 
+            // Processar números (um por linha)
             const numbers = numbersText.split('\n').map(n => n.trim()).filter(n => n);
             if (numbers.length === 0) {
                 alert('❌ Nenhum número válido encontrado!');
                 return;
             }
 
+            // Converter para formato de contatos
             const contacts = numbers.map(num => ({
                 number: num,
                 name: num,
@@ -1357,28 +1433,42 @@
             await sendBatch(contacts, message, mediaUrl, delay, 'manual');
         }
 
-        // Enviar lote de mensagens
+
+        /* ############################################################
+           FUNÇÃO: ENVIAR LOTE DE MENSAGENS
+           Descrição: Função principal que envia mensagens em lote
+           Parâmetros:
+           - contacts: Array de contatos
+           - message: Texto da mensagem
+           - mediaUrl: URL ou base64 da mídia (opcional)
+           - delay: Delay entre mensagens em milissegundos
+           - mode: Modo de envio (api, spreadsheet, manual)
+           ############################################################ */
         async function sendBatch(contacts, message, mediaUrl, delay, mode) {
+            // Determinar sufixo dos IDs baseado no modo
             const suffix = mode === 'api' ? '' : mode.charAt(0).toUpperCase() + mode.slice(1);
             const progressContainer = document.getElementById(`progressContainer${suffix}`);
             const progressFill = document.getElementById(`progressFill${suffix}`);
             const progressInfo = document.getElementById(`progressInfo${suffix}`);
             
+            // Mostrar barra de progresso
             progressContainer.classList.add('show');
             
             let success = 0;
             let failed = 0;
 
+            // Loop pelos contatos
             for (let i = 0; i < contacts.length; i++) {
                 const contact = contacts[i];
                 const progress = Math.round(((i + 1) / contacts.length) * 100);
                 
+                // Atualizar progresso
                 progressFill.style.width = progress + '%';
                 progressFill.textContent = progress + '%';
                 progressInfo.textContent = `Enviando ${i + 1} de ${contacts.length}...`;
 
                 try {
-                    // Formatar número
+                    // Formatar número para WhatsApp
                     let number = contact.number;
                     if (contact.type === 'group') {
                         // Grupo já vem com @g.us
@@ -1392,17 +1482,19 @@
                         }
                     }
 
-                    // Preparar payload
+                    // Preparar endpoint e payload baseado no tipo de mídia
                     let endpoint = '';
                     let payload = {};
 
                     if (selectedMediaType === 'text') {
+                        // Enviar apenas texto
                         endpoint = '/message/sendText/' + encodeURIComponent(apiConfig.instance);
                         payload = {
                             number: number,
                             text: message
                         };
                     } else if (selectedMediaType === 'image') {
+                        // Enviar imagem
                         endpoint = '/message/sendMedia/' + encodeURIComponent(apiConfig.instance);
                         payload = {
                             number: number,
@@ -1411,6 +1503,7 @@
                             caption: message
                         };
                     } else if (selectedMediaType === 'video') {
+                        // Enviar vídeo
                         endpoint = '/message/sendMedia/' + encodeURIComponent(apiConfig.instance);
                         payload = {
                             number: number,
@@ -1423,6 +1516,7 @@
                     console.log('Enviando para:', number);
                     console.log('Payload:', payload);
 
+                    // Fazer requisição
                     const response = await fetch(apiConfig.url + endpoint, {
                         method: 'POST',
                         headers: {
@@ -1432,6 +1526,7 @@
                         body: JSON.stringify(payload)
                     });
 
+                    // Verificar resposta
                     if (response.ok) {
                         success++;
                         addLog(`✅ Enviado para ${contact.name} (${contact.number})`, 'success', mode);
@@ -1446,17 +1541,22 @@
                     addLog(`❌ Erro ao enviar para ${contact.name}: ${error.message}`, 'error', mode);
                 }
 
-                // Delay entre mensagens
+                // Aguardar delay antes da próxima mensagem
                 if (i < contacts.length - 1) {
                     await sleep(delay);
                 }
             }
 
+            // Finalizar
             progressInfo.textContent = `✅ Concluído! ${success} enviadas, ${failed} falharam`;
             addLog(`🎉 Envio concluído! ${success} sucesso, ${failed} falhas`, 'info', mode);
         }
 
-        // Carregar planilha
+
+        /* ############################################################
+           FUNÇÃO: CARREGAR PLANILHA
+           Descrição: Lê arquivo CSV/TXT e carrega números
+           ############################################################ */
         function loadSpreadsheet() {
             const fileInput = document.getElementById('spreadsheetFile');
             const file = fileInput.files[0];
@@ -1468,6 +1568,7 @@
                 const text = e.target.result;
                 const lines = text.split('\n').map(l => l.trim()).filter(l => l);
                 
+                // Converter para formato de contatos
                 allContacts = lines.map(num => ({
                     number: num,
                     name: num,
@@ -1475,6 +1576,7 @@
                     id: num
                 }));
 
+                // Mostrar resultado
                 document.getElementById('spreadsheetList').innerHTML = `
                     <p style="text-align: center; color: #28a745; font-weight: 600;">
                         ✅ ${allContacts.length} números carregados!
@@ -1487,7 +1589,12 @@
             reader.readAsText(file);
         }
 
-        // Converter arquivo para base64
+
+        /* ############################################################
+           FUNÇÃO: CONVERTER ARQUIVO PARA BASE64
+           Descrição: Converte arquivo de imagem/vídeo para base64
+           Retorna: Promise com string base64
+           ############################################################ */
         function fileToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1497,26 +1604,29 @@
             });
         }
 
-        // Sleep
+
+        /* ############################################################
+           FUNÇÃO: SLEEP
+           Descrição: Pausa a execução por X milissegundos
+           Parâmetros:
+           - ms: Milissegundos para aguardar
+           ############################################################ */
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-        // Adicionar log
+
+        /* ############################################################
+           FUNÇÃO: ADICIONAR LOG
+           Descrição: Adiciona entrada no console de logs
+           Parâmetros:
+           - message: Mensagem a ser exibida
+           - type: Tipo do log (info, success, error)
+           - mode: Modo atual (api, spreadsheet, manual)
+           ############################################################ */
         function addLog(message, type = 'info', mode = 'api') {
             const suffix = mode === 'api' ? '' : mode.charAt(0).toUpperCase() + mode.slice(1);
             const container = document.getElementById(`logContainer${suffix}`);
             
             const time = new Date().toLocaleTimeString();
-            const logClass = type === 'success' ? 'log-success' : type === 'error' ? 'log-error' : 'log-info';
-            
-            const entry = document.createElement('div');
-            entry.className = 'log-entry';
-            entry.innerHTML = `<span class="log-time">[${time}]</span><span class="${logClass}">${message}</span>`;
-            
-            container.appendChild(entry);
-            container.scrollTop = container.scrollHeight;
-        }
-    </script>
-</body>
-</html>
+            const logClass = type === 'success' ? 'log-success' : type === 'error' ? 'log-error' : 'log-
